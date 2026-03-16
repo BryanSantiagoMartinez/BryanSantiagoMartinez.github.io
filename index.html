@@ -1,706 +1,317 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Portfolio — Finance & Analytics</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
+<title>Santiago Martinez — Finance & Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@300;400;500&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg: #0a0d0f;
-    --bg2: #0f1417;
-    --bg3: #141a1e;
-    --card: #161d22;
-    --border: #1e2a30;
-    --accent: #00d4aa;
-    --accent2: #0099ff;
-    --gold: #f0b429;
-    --text: #e8edf0;
-    --muted: #5a6a74;
-    --muted2: #8a9ba6;
-    --danger: #ff4d6d;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Lora', serif;
-    overflow-x: hidden;
-  }
-
-  /* GRID NOISE BACKGROUND */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,212,170,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,212,170,0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 100;
-    padding: 1.2rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(10,13,15,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .nav-logo {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.85rem;
-    color: var(--accent);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--muted2);
-    text-decoration: none;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-
-  .nav-links a:hover { color: var(--accent); }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 0 3rem;
-    overflow: hidden;
-  }
-
-  .hero-bg-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(120px);
-    pointer-events: none;
-  }
-
-  .orb1 {
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(0,212,170,0.12), transparent 70%);
-    top: -100px; left: -100px;
-  }
-
-  .orb2 {
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(0,153,255,0.08), transparent 70%);
-    bottom: 100px; right: 200px;
-  }
-
-  .hero-content {
-    position: relative;
-    z-index: 1;
-    max-width: 900px;
-  }
-
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--accent);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 1.8rem;
-    padding: 0.4rem 1rem;
-    border: 1px solid rgba(0,212,170,0.3);
-    border-radius: 2px;
-  }
-
-  .hero-tag::before {
-    content: '';
-    width: 6px; height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.8); }
-  }
-
-  .hero h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(3rem, 7vw, 6rem);
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.03em;
-    margin-bottom: 1.5rem;
-  }
-
-  .hero h1 .name-line {
-    display: block;
-    color: var(--text);
-  }
-
-  .hero h1 .accent-line {
-    display: block;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero-desc {
-    font-size: 1.15rem;
-    color: var(--muted2);
-    line-height: 1.7;
-    max-width: 560px;
-    margin-bottom: 2.5rem;
-    font-style: italic;
-  }
-
-  .hero-btns {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .btn-primary {
-    padding: 0.85rem 2rem;
-    background: var(--accent);
-    color: var(--bg);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border-radius: 2px;
-    transition: all 0.2s;
-  }
-
-  .btn-primary:hover {
-    background: #00f5c3;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0,212,170,0.3);
-  }
-
-  .btn-ghost {
-    padding: 0.85rem 2rem;
-    border: 1px solid var(--border);
-    color: var(--muted2);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border-radius: 2px;
-    transition: all 0.2s;
-  }
-
-  .btn-ghost:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  .hero-stats {
-    position: absolute;
-    right: 3rem;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    z-index: 1;
-  }
-
-  .stat-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 1.2rem 1.6rem;
-    text-align: right;
-    min-width: 140px;
-  }
-
-  .stat-card .stat-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--accent);
-    line-height: 1;
-  }
-
-  .stat-card .stat-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-top: 0.3rem;
-  }
-
-  /* SECTIONS */
-  section {
-    position: relative;
-    z-index: 1;
-    padding: 6rem 3rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--accent);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 0.8rem;
-  }
-
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 1rem;
-    letter-spacing: -0.02em;
-  }
-
-  .section-sub {
-    color: var(--muted2);
-    font-style: italic;
-    font-size: 1.05rem;
-    max-width: 600px;
-    margin-bottom: 3.5rem;
-    line-height: 1.7;
-  }
-
-  /* DIVIDER */
-  .divider {
-    width: 100%;
-    height: 1px;
-    background: var(--border);
-    margin: 0;
-  }
-
-  /* PROJECTS GRID */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .project-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2rem;
-    transition: all 0.3s;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .project-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s;
-  }
-
-  .project-card:hover {
-    border-color: rgba(0,212,170,0.3);
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-  }
-
-  .project-card:hover::before { transform: scaleX(1); }
-
-  .project-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-  }
-
-  .project-icon {
-    font-size: 1.8rem;
-  }
-
-  .project-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.25rem 0.6rem;
-    border-radius: 2px;
-  }
-
-  .badge-ml { background: rgba(0,212,170,0.15); color: var(--accent); border: 1px solid rgba(0,212,170,0.3); }
-  .badge-quant { background: rgba(0,153,255,0.15); color: var(--accent2); border: 1px solid rgba(0,153,255,0.3); }
-  .badge-viz { background: rgba(240,180,41,0.15); color: var(--gold); border: 1px solid rgba(240,180,41,0.3); }
-  .badge-nlp { background: rgba(255,77,109,0.15); color: var(--danger); border: 1px solid rgba(255,77,109,0.3); }
-
-  .project-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin-bottom: 0.6rem;
-    color: var(--text);
-  }
-
-  .project-desc {
-    color: var(--muted2);
-    font-size: 0.9rem;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    font-style: italic;
-  }
-
-  .project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    padding: 0.2rem 0.6rem;
-    border-radius: 2px;
-    letter-spacing: 0.05em;
-  }
-
-  .project-footer {
-    display: flex;
-    gap: 1rem;
-  }
-
-  .project-link {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--accent);
-    text-decoration: none;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    transition: gap 0.2s;
-  }
-
-  .project-link:hover { gap: 0.6rem; }
-
-  /* SKILLS */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-
-  .skill-group {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 1.5rem;
-  }
-
-  .skill-group-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
-
-  .skill-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .skill-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--muted2);
-  }
-
-  .skill-dot {
-    width: 4px; height: 4px;
-    background: var(--accent);
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  /* ABOUT */
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: start;
-  }
-
-  .about-text p {
-    color: var(--muted2);
-    line-height: 1.8;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-  }
-
-  .about-text p strong {
-    color: var(--text);
-    font-style: normal;
-  }
-
-  .coursework {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2rem;
-  }
-
-  .coursework h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 1.2rem;
-    color: var(--text);
-  }
-
-  .course-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-
-  .course-list li {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.78rem;
-    color: var(--muted2);
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    letter-spacing: 0.02em;
-  }
-
-  .course-list li::before {
-    content: '→';
-    color: var(--accent);
-    font-size: 0.7rem;
-  }
-
-  /* CONTACT */
-  .contact-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: center;
-  }
-
-  .contact-text p {
-    color: var(--muted2);
-    line-height: 1.8;
-    font-style: italic;
-  }
-
-  .contact-links {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .contact-link {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.2rem 1.5rem;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    text-decoration: none;
-    transition: all 0.2s;
-    color: var(--text);
-  }
-
-  .contact-link:hover {
-    border-color: var(--accent);
-    transform: translateX(6px);
-  }
-
-  .contact-link-icon {
-    font-size: 1.2rem;
-    width: 2rem;
-    text-align: center;
-  }
-
-  .contact-link-info {
-    flex: 1;
-  }
-
-  .contact-link-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  .contact-link-value {
-    font-size: 0.95rem;
-    color: var(--text);
-    margin-top: 0.15rem;
-  }
-
-  /* FOOTER */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 2rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-  }
-
-  /* TICKER */
-  .ticker-bar {
-    background: var(--bg2);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 0.5rem 0;
-    overflow: hidden;
-    position: relative;
-    z-index: 1;
-  }
-
-  .ticker-track {
-    display: flex;
-    gap: 3rem;
-    animation: ticker 30s linear infinite;
-    white-space: nowrap;
-  }
-
-  @keyframes ticker {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  .ticker-item {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .ticker-item .up { color: var(--accent); }
-  .ticker-item .down { color: var(--danger); }
-
-  /* FEATURED */
-  .featured-card {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .featured-card::before {
-    content: 'FEATURED';
-    position: absolute;
-    top: 1.5rem; right: 1.5rem;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--gold);
-    letter-spacing: 0.2em;
-    border: 1px solid rgba(240,180,41,0.4);
-    padding: 0.2rem 0.5rem;
-    border-radius: 2px;
-  }
-
-  .featured-content {
-    padding: 2.5rem;
-  }
-
-  .featured-visual {
-    background: linear-gradient(135deg, #0d1f2d, #0a1628);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    border-left: 1px solid var(--border);
-  }
-
-  .chart-preview {
-    width: 100%;
-    height: 180px;
-  }
-
-  .chart-preview svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  /* responsive */
-  @media (max-width: 900px) {
-    nav { padding: 1rem 1.5rem; }
-    .nav-links { display: none; }
-    .hero { padding: 8rem 1.5rem 3rem; flex-direction: column; }
-    .hero-stats { position: static; transform: none; flex-direction: row; flex-wrap: wrap; margin-top: 3rem; }
-    section { padding: 4rem 1.5rem; }
-    .about-grid, .contact-wrapper, .featured-card { grid-template-columns: 1fr; }
-    .featured-visual { display: none; }
-    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
-  }
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+:root {
+  --bg:      #f7f7f6;
+  --surface: #ffffff;
+  --border:  #e5e5e3;
+  --border2: #d4d4d1;
+  --ink:     #1a1a18;
+  --ink2:    #3d3d3a;
+  --muted:   #8c8c88;
+  --muted2:  #b0b0ac;
+  --green:   #16a34a;
+  --red:     #dc2626;
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Geist', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+nav {
+  position: fixed; top:0; width:100%; z-index:100;
+  background: rgba(247,247,246,0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2.5rem; height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.75rem; letter-spacing: 0.08em;
+  color: var(--ink); text-decoration: none;
+}
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.72rem; letter-spacing: 0.06em;
+  color: var(--muted); text-decoration: none; transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--ink); }
+
+/* HERO */
+.hero {
+  padding: 9rem 2.5rem 6rem;
+  max-width: 860px; margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+.hero-eyebrow {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.68rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted2);
+  margin-bottom: 2rem;
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.hero-eyebrow::before {
+  content: ''; display: inline-block;
+  width: 24px; height: 1px; background: var(--border2);
+}
+.hero h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 400; line-height: 1.05;
+  letter-spacing: -0.02em; color: var(--ink);
+  margin-bottom: 1.6rem;
+}
+.hero h1 em { font-style: italic; color: var(--muted); }
+.hero-desc {
+  font-size: 1.1rem; color: var(--ink2);
+  line-height: 1.8; max-width: 560px; margin-bottom: 3rem;
+}
+.hero-desc strong { color: var(--ink); font-weight: 500; }
+.hero-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; align-items: center; }
+.btn {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.72rem; letter-spacing: 0.06em;
+  padding: 0.6rem 1.2rem; border-radius: 3px;
+  text-decoration: none; transition: all 0.15s;
+}
+.btn-solid { background: var(--ink); color: var(--bg); border: 1px solid var(--ink); }
+.btn-solid:hover { background: var(--ink2); }
+.btn-ghost { border: 1px solid var(--border); color: var(--muted); }
+.btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+/* ABOUT STRIP */
+.about-strip { border-bottom: 1px solid var(--border); background: var(--surface); }
+.about-inner {
+  max-width: 860px; margin: 0 auto; padding: 0 2.5rem;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.about-item {
+  padding: 1.8rem 2rem 1.8rem 0;
+  border-right: 1px solid var(--border);
+}
+.about-item:last-child { border-right: none; }
+.about-item + .about-item { padding-left: 2rem; }
+.about-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted2); margin-bottom: 0.4rem;
+}
+.about-value { font-size: 0.9rem; color: var(--ink2); line-height: 1.5; }
+.about-value strong { color: var(--ink); font-weight: 500; }
+
+/* SECTION */
+.page-section {
+  max-width: 860px; margin: 0 auto;
+  padding: 5rem 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.section-eyebrow {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted2); margin-bottom: 0.6rem;
+}
+.section-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2rem; font-weight: 400;
+  letter-spacing: -0.01em; color: var(--ink);
+  margin-bottom: 0.6rem; line-height: 1.2;
+}
+.section-sub {
+  font-size: 0.97rem; color: var(--muted);
+  margin-bottom: 3rem; line-height: 1.7; max-width: 520px;
+}
+
+/* PROJECTS */
+.projects-list {
+  display: flex; flex-direction: column; gap: 1px;
+  background: var(--border); border: 1px solid var(--border);
+}
+.project-featured {
+  background: var(--surface); padding: 2.5rem;
+  display: grid; grid-template-columns: 1fr 220px;
+  gap: 3rem; align-items: start; transition: background 0.15s;
+}
+.project-featured:hover { background: #fafaf9; }
+.project-row {
+  background: var(--surface); padding: 1.8rem 2.5rem;
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 2rem; align-items: start;
+  text-decoration: none; color: inherit;
+  transition: background 0.15s;
+}
+.project-row:hover { background: #fafaf9; }
+.project-meta-top {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 0.7rem; flex-wrap: wrap;
+}
+.project-tag {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted2);
+}
+.project-tag-dot { width: 2px; height: 2px; border-radius: 50%; background: var(--border2); }
+.project-name {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.25rem; font-weight: 400;
+  color: var(--ink); line-height: 1.3; margin-bottom: 0.6rem;
+}
+.project-name em { font-style: italic; color: var(--muted); }
+.project-desc {
+  font-size: 0.9rem; color: var(--ink2);
+  line-height: 1.7; margin-bottom: 1.2rem; max-width: 520px;
+}
+.project-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.stack-tag {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.65rem; color: var(--muted);
+  background: var(--bg); border: 1px solid var(--border);
+  padding: 0.2rem 0.5rem; border-radius: 2px;
+}
+.project-links {
+  display: flex; flex-direction: column;
+  gap: 0.5rem; align-items: flex-end; flex-shrink: 0;
+}
+.project-link {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.7rem; letter-spacing: 0.04em;
+  color: var(--muted); text-decoration: none;
+  transition: color 0.15s; white-space: nowrap;
+}
+.project-link:hover { color: var(--ink); }
+.project-link.primary { color: var(--ink); font-weight: 500; }
+
+/* Featured side panel */
+.featured-stats { border-left: 1px solid var(--border); padding-left: 2rem; }
+.feat-stat { margin-bottom: 1.5rem; }
+.feat-stat:last-child { margin-bottom: 0; }
+.feat-stat-num {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.8rem; color: var(--ink); line-height: 1;
+}
+.feat-stat-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted2); margin-top: 0.2rem;
+}
+.feat-badge {
+  font-family: 'Geist Mono', monospace; font-size: 0.62rem;
+  letter-spacing: 0.06em; color: var(--green);
+  border: 1px solid rgba(22,163,74,0.3);
+  padding: 0.25rem 0.6rem; border-radius: 2px;
+  display: inline-block; margin-top: 1.5rem;
+}
+.feat-badge-wip {
+  font-family: 'Geist Mono', monospace; font-size: 0.62rem;
+  letter-spacing: 0.06em; color: var(--muted2);
+  border: 1px solid var(--border);
+  padding: 0.25rem 0.6rem; border-radius: 2px;
+  display: inline-block; margin-top: 0.4rem;
+}
+
+/* SKILLS */
+.skills-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+}
+.skill-group { background: var(--surface); padding: 1.8rem; }
+.skill-group-name {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted2);
+  margin-bottom: 1rem; padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+.skill-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.skill-item {
+  font-size: 0.88rem; color: var(--ink2);
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.skill-item::before {
+  content: ''; width: 3px; height: 3px; border-radius: 50%;
+  background: var(--border2); flex-shrink: 0;
+}
+
+/* CONTACT */
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: start;
+}
+.contact-prose { font-size: 1rem; color: var(--ink2); line-height: 1.8; }
+.contact-prose strong { color: var(--ink); font-weight: 500; }
+.contact-prose p + p { margin-top: 1rem; }
+.contact-links {
+  display: flex; flex-direction: column;
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+}
+.contact-link {
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.2rem; text-decoration: none; transition: background 0.15s; gap: 1rem;
+}
+.contact-link:hover { background: #fafaf9; }
+.contact-link-left { display: flex; flex-direction: column; gap: 0.15rem; }
+.contact-link-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.65rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--muted2);
+}
+.contact-link-value { font-size: 0.88rem; color: var(--ink2); }
+.contact-link-arrow {
+  font-family: 'Geist Mono', monospace; font-size: 0.75rem;
+  color: var(--muted2); transition: color 0.15s;
+}
+.contact-link:hover .contact-link-arrow { color: var(--ink); }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border); padding: 1.5rem 2.5rem;
+  max-width: 860px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-copy, .footer-note {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.68rem; color: var(--muted2); letter-spacing: 0.04em;
+}
+
+/* RESPONSIVE */
+@media (max-width: 800px) {
+  nav { padding: 0 1.5rem; }
+  .nav-links { display: none; }
+  .hero, .page-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .about-inner { grid-template-columns: 1fr 1fr; padding: 0 1.5rem; }
+  .about-item { padding: 1.2rem 0; border-right: none; border-bottom: 1px solid var(--border); }
+  .about-item + .about-item { padding-left: 0; }
+  .project-featured { grid-template-columns: 1fr; }
+  .featured-stats { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; gap: 2rem; flex-wrap: wrap; }
+  .project-row { grid-template-columns: 1fr; gap: 1rem; }
+  .project-links { flex-direction: row; align-items: flex-start; }
+  .skills-grid { grid-template-columns: 1fr 1fr; }
+  .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  footer { flex-direction: column; gap: 0.4rem; text-align: center; }
+}
+@media (max-width: 500px) {
+  .skills-grid, .about-inner { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <div class="nav-logo">// portfolio.finance</div>
+  <a href="index.html" class="nav-logo">portfolio.finance</a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#projects">Projects</a></li>
@@ -709,352 +320,340 @@
   </ul>
 </nav>
 
-<!-- TICKER -->
-<div style="padding-top:65px">
-  <div class="ticker-bar">
-    <div class="ticker-track">
-      <span class="ticker-item">SPX <span class="up">▲ +0.84%</span></span>
-      <span class="ticker-item">EUR/USD <span class="down">▼ −0.21%</span></span>
-      <span class="ticker-item">BTC/USD <span class="up">▲ +2.17%</span></span>
-      <span class="ticker-item">10Y YIELD <span class="up">4.42%</span></span>
-      <span class="ticker-item">GOLD <span class="up">▲ +0.56%</span></span>
-      <span class="ticker-item">VIX <span class="down">▼ 14.3</span></span>
-      <span class="ticker-item">DXY <span class="down">▼ −0.32%</span></span>
-      <span class="ticker-item">WTI CRUDE <span class="up">▲ +1.04%</span></span>
-      <!-- duplicate for seamless loop -->
-      <span class="ticker-item">SPX <span class="up">▲ +0.84%</span></span>
-      <span class="ticker-item">EUR/USD <span class="down">▼ −0.21%</span></span>
-      <span class="ticker-item">BTC/USD <span class="up">▲ +2.17%</span></span>
-      <span class="ticker-item">10Y YIELD <span class="up">4.42%</span></span>
-      <span class="ticker-item">GOLD <span class="up">▲ +0.56%</span></span>
-      <span class="ticker-item">VIX <span class="down">▼ 14.3</span></span>
-      <span class="ticker-item">DXY <span class="down">▼ −0.32%</span></span>
-      <span class="ticker-item">WTI CRUDE <span class="up">▲ +1.04%</span></span>
-    </div>
-  </div>
-</div>
-
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-bg-orb orb1"></div>
-  <div class="hero-bg-orb orb2"></div>
-  <div class="hero-content">
-    <div class="hero-tag">Open to opportunities · 2025</div>
-    <h1>
-      <span class="name-line">Your Name</span>
-      <span class="accent-line">Finance &<br>Analytics</span>
-    </h1>
-    <p class="hero-desc">
-      MSc in Business Management, specializing in International Finance. 
-      I build quantitative models, analytical dashboards and data-driven 
-      insights at the intersection of finance and technology.
-    </p>
-    <div class="hero-btns">
-      <a href="#projects" class="btn-primary">View Projects →</a>
-      <a href="#contact" class="btn-ghost">Get in Touch</a>
-    </div>
+  <div class="hero-eyebrow">Open to opportunities · MSc International Finance · Paris</div>
+  <h1>Santiago Martinez<br/><em>Finance &<br/>Analytics</em></h1>
+  <p class="hero-desc">
+    I build <strong>quantitative models, FP&A frameworks and analytical tools</strong>
+    at the intersection of finance and data science —
+    with a focus on SaaS, banking, fintech and AI-driven financial products.
+  </p>
+  <div class="hero-actions">
+    <a href="#projects" class="btn btn-solid">View Projects</a>
+    <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+    <a href="/cv.pdf" class="btn btn-ghost">Download CV</a>
   </div>
-  <div class="hero-stats">
-    <div class="stat-card">
-      <div class="stat-num">7+</div>
-      <div class="stat-label">Projects</div>
+</div>
+
+<!-- ABOUT -->
+<div id="about" class="about-strip">
+  <div class="about-inner">
+    <div class="about-item">
+      <div class="about-label">Degree</div>
+      <div class="about-value"><strong>MSc International Management</strong><br/>International Finance · ESC Rennes</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-num">3</div>
-      <div class="stat-label">Languages</div>
+    <div class="about-item">
+      <div class="about-label">Focus Areas</div>
+      <div class="about-value">FP&A · Quant Finance · Risk Analytics · AI in Finance</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-num">∞</div>
-      <div class="stat-label">Curiosity</div>
+    <div class="about-item">
+      <div class="about-label">Interests</div>
+      <div class="about-value">Banking · Fintech · SaaS · Startups · AI-driven products</div>
+    </div>
+    <div class="about-item">
+      <div class="about-label">Looking for</div>
+      <div class="about-value"><strong>Internships</strong> in investment analytics, FP&A or business analysis</div>
     </div>
   </div>
 </div>
 
-<div class="divider"></div>
-
-<!-- ABOUT -->
-<section id="about">
-  <div class="section-label">// 01. about</div>
-  <h2 class="section-title">Who I Am</h2>
-  <div class="about-grid">
-    <div class="about-text">
-      <p>I'm a master's student in <strong>Business Management with a focus on International Finance</strong>, passionate about applying quantitative methods to real-world financial problems.</p>
-      <p>My academic journey has given me a strong foundation in <strong>financial econometrics, time series modeling, exchange rate dynamics</strong>, and the quantitative tools that drive decisions in capital markets and corporate finance.</p>
-      <p>I'm actively looking for <strong>internships or junior roles</strong> in financial analysis, quantitative research, or business intelligence — anywhere data and finance intersect.</p>
-    </div>
-    <div class="coursework">
-      <h3>Relevant Coursework</h3>
-      <ul class="course-list">
-        <li>Financial Econometrics</li>
-        <li>Quantitative Finance</li>
-        <li>Exchange Markets & FX</li>
-        <li>Data Science for Business</li>
-        <li>Time Series Analysis</li>
-        <li>Corporate Finance</li>
-        <li>International Financial Markets</li>
-        <li>Risk Management</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
 <!-- PROJECTS -->
-<section id="projects">
-  <div class="section-label">// 02. projects</div>
+<div id="projects" class="page-section">
+  <div class="section-eyebrow">02 — Projects</div>
   <h2 class="section-title">Selected Work</h2>
   <p class="section-sub">End-to-end financial and analytical projects — from raw data to actionable insights.</p>
 
-  <div class="projects-grid">
+  <div class="projects-list">
 
     <!-- FEATURED -->
-    <div class="featured-card">
-      <div class="featured-content">
-        <div class="project-header">
-          <span class="project-icon">📈</span>
-          <span class="project-badge badge-ml">ML · Time Series</span>
+    <div class="project-featured">
+      <div>
+        <div class="project-meta-top">
+          <span class="project-tag">Quant Finance</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag">Python · scipy · yfinance</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag">2025</span>
         </div>
-        <div class="project-title">Asset Price Prediction with LSTM + GARCH</div>
-        <p class="project-desc">Hybrid deep learning and volatility modeling pipeline to forecast S&P 500 returns. Compares ARIMA, GARCH, and LSTM models with walk-forward validation and Sharpe-adjusted performance metrics.</p>
-        <div class="project-tags">
-          <span class="tag">Python</span><span class="tag">TensorFlow</span><span class="tag">statsmodels</span>
-          <span class="tag">yfinance</span><span class="tag">Plotly</span>
+        <div class="project-name">Portfolio Risk &<br/><em>Optimization Engine</em></div>
+        <p class="project-desc">
+          Complete mean-variance optimization system built from raw market data.
+          Markowitz efficient frontier via Monte Carlo simulation (10,000 portfolios)
+          and scipy SLSQP constrained optimization — tested across four distinct
+          market regimes from 2020 to 2024.
+        </p>
+        <div class="project-stack">
+          <span class="stack-tag">Python</span>
+          <span class="stack-tag">scipy</span>
+          <span class="stack-tag">yfinance</span>
+          <span class="stack-tag">numpy</span>
+          <span class="stack-tag">matplotlib</span>
+          <span class="stack-tag">Google Colab</span>
         </div>
-        <div class="project-footer">
-          <a href="#" class="project-link">GitHub →</a>
-          <a href="#" class="project-link">Live Demo →</a>
+        <div style="margin-top:1.2rem; display:flex; gap:0.8rem; flex-wrap:wrap;">
+          <a href="project-portfolio-optimizer.html" class="btn btn-solid" style="font-size:0.68rem; padding:0.5rem 1rem;">Read Case Study →</a>
+          <a href="#" class="btn btn-ghost" style="font-size:0.68rem; padding:0.5rem 1rem;">GitHub →</a>
         </div>
       </div>
-      <div class="featured-visual">
-        <!-- Simple SVG chart preview -->
-        <svg class="chart-preview" viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#00d4aa" stop-opacity="0.3"/>
-              <stop offset="100%" stop-color="#00d4aa" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <!-- Grid lines -->
-          <line x1="0" y1="45" x2="300" y2="45" stroke="#1e2a30" stroke-width="1"/>
-          <line x1="0" y1="90" x2="300" y2="90" stroke="#1e2a30" stroke-width="1"/>
-          <line x1="0" y1="135" x2="300" y2="135" stroke="#1e2a30" stroke-width="1"/>
-          <!-- Area fill -->
-          <path d="M0,140 C20,130 30,110 50,100 C70,90 80,115 100,105 C120,95 130,70 150,60 C170,50 180,80 200,70 C220,60 240,40 260,30 C280,20 295,35 300,30 L300,180 L0,180 Z" fill="url(#chartGrad)"/>
-          <!-- Main line -->
-          <path d="M0,140 C20,130 30,110 50,100 C70,90 80,115 100,105 C120,95 130,70 150,60 C170,50 180,80 200,70 C220,60 240,40 260,30 C280,20 295,35 300,30" fill="none" stroke="#00d4aa" stroke-width="2"/>
-          <!-- Prediction line (dashed) -->
-          <path d="M200,70 C220,60 240,35 260,20 C280,5 295,10 300,8" fill="none" stroke="#0099ff" stroke-width="2" stroke-dasharray="5,3"/>
-          <!-- Dots -->
-          <circle cx="150" cy="60" r="4" fill="#00d4aa"/>
-          <circle cx="200" cy="70" r="4" fill="#00d4aa"/>
-          <circle cx="260" cy="20" r="4" fill="#0099ff" opacity="0.7"/>
-          <!-- Labels -->
-          <text x="205" y="65" font-family="monospace" font-size="9" fill="#5a6a74">actual</text>
-          <text x="230" y="15" font-family="monospace" font-size="9" fill="#0099ff">forecast</text>
-        </svg>
+      <div class="featured-stats">
+        <div class="feat-stat">
+          <div class="feat-stat-num">0.979</div>
+          <div class="feat-stat-label">Max Sharpe Ratio</div>
+        </div>
+        <div class="feat-stat">
+          <div class="feat-stat-num">12.3%</div>
+          <div class="feat-stat-label">Min Portfolio Vol</div>
+        </div>
+        <div class="feat-stat">
+          <div class="feat-stat-num">10K</div>
+          <div class="feat-stat-label">Monte Carlo runs</div>
+        </div>
+        <span class="feat-badge">Module 1 complete</span><br/>
+        <span class="feat-badge-wip">Module 2 — in progress</span>
       </div>
     </div>
 
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-icon">⚖️</span>
-        <span class="project-badge badge-quant">Quant Finance</span>
+    <!-- FP&A -->
+    <div class="project-row" onclick="window.location='project-fpa-northstar.html'" style="cursor:pointer;">
+      <div>
+        <div class="project-meta-top">
+          <span class="project-tag">FP&A</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag">SQL · Excel · Power BI</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag">2025</span>
+        </div>
+        <div class="project-name">SaaS FP&A Model — <em>NorthStar</em></div>
+        <p class="project-desc">Full-stack financial planning project — SQLite database to three-statement Excel model to Power BI executive dashboard. 500 customers, 36 months of MRR dynamics, scenario analysis across a complete SaaS business cycle.</p>
+        <div class="project-stack">
+          <span class="stack-tag">SQLite</span><span class="stack-tag">Python</span>
+          <span class="stack-tag">Excel</span><span class="stack-tag">Power BI</span><span class="stack-tag">DAX</span>
+        </div>
       </div>
-      <div class="project-title">Portfolio Optimizer — Efficient Frontier</div>
-      <p class="project-desc">Interactive Markowitz portfolio optimization with Monte Carlo simulation, Sharpe ratio maximization, and risk-parity weighting. Includes a Streamlit dashboard.</p>
-      <div class="project-tags">
-        <span class="tag">Python</span><span class="tag">scipy</span><span class="tag">Streamlit</span><span class="tag">Plotly</span>
-      </div>
-      <div class="project-footer">
-        <a href="#" class="project-link">GitHub →</a>
-        <a href="#" class="project-link">Demo →</a>
-      </div>
-    </div>
-
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-icon">💱</span>
-        <span class="project-badge badge-viz">FX Analytics</span>
-      </div>
-      <div class="project-title">FX Dashboard — Exchange Rate Analysis</div>
-      <p class="project-desc">Carry trade strategy backtesting, purchasing power parity deviations, and cross-currency correlation heatmaps across G10 pairs.</p>
-      <div class="project-tags">
-        <span class="tag">Python</span><span class="tag">pandas</span><span class="tag">Power BI</span><span class="tag">ECB API</span>
-      </div>
-      <div class="project-footer">
-        <a href="#" class="project-link">GitHub →</a>
+      <div class="project-links">
+        <a href="project-fpa-northstar.html" class="project-link primary" onclick="event.stopPropagation()">Read Case Study →</a>
+        <a href="#" class="project-link" onclick="event.stopPropagation()">GitHub →</a>
       </div>
     </div>
 
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-icon">🏦</span>
-        <span class="project-badge badge-ml">Credit Risk</span>
+    <!-- FX — coming soon -->
+    <div class="project-row" style="opacity:0.45; pointer-events:none;">
+      <div>
+        <div class="project-meta-top">
+          <span class="project-tag">FX Analytics</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag">Python · ECB API · Power BI</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag" style="color:var(--muted)">Coming soon</span>
+        </div>
+        <div class="project-name">FX Dashboard — <em>Exchange Rate Analysis</em></div>
+        <p class="project-desc">Carry trade strategy backtesting, purchasing power parity deviations, and cross-currency correlation heatmaps across G10 pairs.</p>
+        <div class="project-stack">
+          <span class="stack-tag">Python</span><span class="stack-tag">pandas</span>
+          <span class="stack-tag">Power BI</span><span class="stack-tag">ECB API</span>
+        </div>
       </div>
-      <div class="project-title">Credit Default Prediction Model</div>
-      <p class="project-desc">Binary classification pipeline (Logistic Regression, XGBoost, Random Forest) with SHAP explainability for consumer credit default — achieving 87% AUC-ROC.</p>
-      <div class="project-tags">
-        <span class="tag">Python</span><span class="tag">XGBoost</span><span class="tag">SHAP</span><span class="tag">sklearn</span>
-      </div>
-      <div class="project-footer">
-        <a href="#" class="project-link">GitHub →</a>
-        <a href="#" class="project-link">Notebook →</a>
-      </div>
-    </div>
-
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-icon">📰</span>
-        <span class="project-badge badge-nlp">NLP · Sentiment</span>
-      </div>
-      <div class="project-title">News Sentiment vs. Market Returns</div>
-      <p class="project-desc">Scraped financial headlines and correlated sentiment scores (VADER + FinBERT) with next-day equity returns. Tested Granger causality between news tone and price movements.</p>
-      <div class="project-tags">
-        <span class="tag">Python</span><span class="tag">FinBERT</span><span class="tag">BeautifulSoup</span><span class="tag">statsmodels</span>
-      </div>
-      <div class="project-footer">
-        <a href="#" class="project-link">GitHub →</a>
+      <div class="project-links">
+        <span class="project-link" style="cursor:default;">Coming soon</span>
       </div>
     </div>
 
-    <div class="project-card">
-      <div class="project-header">
-        <span class="project-icon">📊</span>
-        <span class="project-badge badge-viz">BI Dashboard</span>
+    <!-- Credit Risk — coming soon -->
+    <div class="project-row" style="opacity:0.45; pointer-events:none;">
+      <div>
+        <div class="project-meta-top">
+          <span class="project-tag">Credit Risk · ML</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag">Python · XGBoost · SHAP</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag" style="color:var(--muted)">Coming soon</span>
+        </div>
+        <div class="project-name">Credit Default <em>Prediction Model</em></div>
+        <p class="project-desc">Binary classification pipeline with Logistic Regression, XGBoost and Random Forest — with SHAP explainability for consumer credit default. 87% AUC-ROC.</p>
+        <div class="project-stack">
+          <span class="stack-tag">Python</span><span class="stack-tag">XGBoost</span>
+          <span class="stack-tag">SHAP</span><span class="stack-tag">sklearn</span>
+        </div>
       </div>
-      <div class="project-title">Financial KPI Dashboard</div>
-      <p class="project-desc">End-to-end Business Analyst dashboard tracking revenue growth, gross margin, CAC, LTV, and churn — built for a simulated SaaS company using public benchmark data.</p>
-      <div class="project-tags">
-        <span class="tag">Power BI</span><span class="tag">SQL</span><span class="tag">DAX</span><span class="tag">Excel</span>
+      <div class="project-links">
+        <span class="project-link" style="cursor:default;">Coming soon</span>
       </div>
-      <div class="project-footer">
-        <a href="#" class="project-link">GitHub →</a>
-        <a href="#" class="project-link">Report →</a>
+    </div>
+
+    <!-- Sentiment — coming soon -->
+    <div class="project-row" style="opacity:0.45; pointer-events:none;">
+      <div>
+        <div class="project-meta-top">
+          <span class="project-tag">NLP · Sentiment</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag">Python · FinBERT · statsmodels</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag" style="color:var(--muted)">Coming soon</span>
+        </div>
+        <div class="project-name">News Sentiment <em>vs. Market Returns</em></div>
+        <p class="project-desc">Scraped financial headlines and correlated sentiment scores (VADER + FinBERT) with next-day equity returns. Tested Granger causality between news tone and price movements.</p>
+        <div class="project-stack">
+          <span class="stack-tag">Python</span><span class="stack-tag">FinBERT</span>
+          <span class="stack-tag">BeautifulSoup</span><span class="stack-tag">statsmodels</span>
+        </div>
+      </div>
+      <div class="project-links">
+        <span class="project-link" style="cursor:default;">Coming soon</span>
+      </div>
+    </div>
+
+    <!-- KPI — coming soon -->
+    <div class="project-row" style="opacity:0.45; pointer-events:none;">
+      <div>
+        <div class="project-meta-top">
+          <span class="project-tag">BI Dashboard</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag">Power BI · SQL · DAX</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag" style="color:var(--muted)">Coming soon</span>
+        </div>
+        <div class="project-name">Financial KPI <em>Dashboard</em></div>
+        <p class="project-desc">End-to-end Business Analyst dashboard tracking revenue growth, gross margin, CAC, LTV and churn — built for a simulated SaaS company using public benchmark data.</p>
+        <div class="project-stack">
+          <span class="stack-tag">Power BI</span><span class="stack-tag">SQL</span>
+          <span class="stack-tag">DAX</span><span class="stack-tag">Excel</span>
+        </div>
+      </div>
+      <div class="project-links">
+        <span class="project-link" style="cursor:default;">Coming soon</span>
+      </div>
+    </div>
+
+    <!-- Coming soon -->
+    <div class="project-row" style="opacity:0.45; pointer-events:none;">
+      <div>
+        <div class="project-meta-top">
+          <span class="project-tag">ML · Time Series</span>
+          <div class="project-tag-dot"></div>
+          <span class="project-tag">Coming soon</span>
+        </div>
+        <div class="project-name">Asset Price Prediction — <em>LSTM + GARCH</em></div>
+        <p class="project-desc">Hybrid deep learning and volatility modeling pipeline to forecast S&P 500 returns. Walk-forward validation across ARIMA, GARCH and LSTM models.</p>
+        <div class="project-stack">
+          <span class="stack-tag">TensorFlow</span><span class="stack-tag">statsmodels</span>
+          <span class="stack-tag">yfinance</span><span class="stack-tag">Plotly</span>
+        </div>
+      </div>
+      <div class="project-links">
+        <span class="project-link" style="cursor:default;">In progress</span>
       </div>
     </div>
 
   </div>
-</section>
-
-<div class="divider"></div>
+</div>
 
 <!-- SKILLS -->
-<section id="skills">
-  <div class="section-label">// 03. skills</div>
+<div id="skills" class="page-section">
+  <div class="section-eyebrow">03 — Skills</div>
   <h2 class="section-title">Tech Stack</h2>
-  <p class="section-sub">Tools and languages I use to turn financial data into decisions.</p>
+  <p class="section-sub">Tools and methods I use to turn financial data into decisions.</p>
   <div class="skills-grid">
     <div class="skill-group">
-      <div class="skill-group-title">Programming</div>
+      <div class="skill-group-name">Programming</div>
       <div class="skill-list">
-        <div class="skill-item"><div class="skill-dot"></div>Python</div>
-        <div class="skill-item"><div class="skill-dot"></div>R</div>
-        <div class="skill-item"><div class="skill-dot"></div>SQL</div>
-        <div class="skill-item"><div class="skill-dot"></div>VBA / Excel</div>
+        <div class="skill-item">Python</div>
+        <div class="skill-item">R</div>
+        <div class="skill-item">SQL</div>
+        <div class="skill-item">VBA / Excel</div>
       </div>
     </div>
     <div class="skill-group">
-      <div class="skill-group-title">ML / Quant</div>
+      <div class="skill-group-name">ML & Quant</div>
       <div class="skill-list">
-        <div class="skill-item"><div class="skill-dot"></div>scikit-learn</div>
-        <div class="skill-item"><div class="skill-dot"></div>TensorFlow / Keras</div>
-        <div class="skill-item"><div class="skill-dot"></div>statsmodels</div>
-        <div class="skill-item"><div class="skill-dot"></div>XGBoost / SHAP</div>
+        <div class="skill-item">scikit-learn</div>
+        <div class="skill-item">TensorFlow / Keras</div>
+        <div class="skill-item">statsmodels</div>
+        <div class="skill-item">XGBoost / SHAP</div>
       </div>
     </div>
     <div class="skill-group">
-      <div class="skill-group-title">Finance Tools</div>
+      <div class="skill-group-name">Finance Tools</div>
       <div class="skill-list">
-        <div class="skill-item"><div class="skill-dot"></div>Bloomberg Terminal</div>
-        <div class="skill-item"><div class="skill-dot"></div>yfinance / FRED API</div>
-        <div class="skill-item"><div class="skill-dot"></div>QuantLib</div>
-        <div class="skill-item"><div class="skill-dot"></div>Excel (advanced)</div>
+        <div class="skill-item">Bloomberg Terminal</div>
+        <div class="skill-item">yfinance / FRED API</div>
+        <div class="skill-item">QuantLib</div>
+        <div class="skill-item">Excel (advanced)</div>
       </div>
     </div>
     <div class="skill-group">
-      <div class="skill-group-title">Visualization</div>
+      <div class="skill-group-name">Visualization</div>
       <div class="skill-list">
-        <div class="skill-item"><div class="skill-dot"></div>Power BI</div>
-        <div class="skill-item"><div class="skill-dot"></div>Tableau</div>
-        <div class="skill-item"><div class="skill-dot"></div>Plotly / Dash</div>
-        <div class="skill-item"><div class="skill-dot"></div>Streamlit</div>
+        <div class="skill-item">Power BI</div>
+        <div class="skill-item">Plotly / Dash</div>
+        <div class="skill-item">Streamlit</div>
+        <div class="skill-item">Tableau</div>
       </div>
     </div>
     <div class="skill-group">
-      <div class="skill-group-title">Methods</div>
+      <div class="skill-group-name">Methods</div>
       <div class="skill-list">
-        <div class="skill-item"><div class="skill-dot"></div>Time Series (ARIMA/GARCH)</div>
-        <div class="skill-item"><div class="skill-dot"></div>Portfolio Optimization</div>
-        <div class="skill-item"><div class="skill-dot"></div>Monte Carlo Simulation</div>
-        <div class="skill-item"><div class="skill-dot"></div>Regression / Econometrics</div>
+        <div class="skill-item">Time Series (ARIMA/GARCH)</div>
+        <div class="skill-item">Portfolio Optimization</div>
+        <div class="skill-item">Monte Carlo Simulation</div>
+        <div class="skill-item">Financial Econometrics</div>
       </div>
     </div>
     <div class="skill-group">
-      <div class="skill-group-title">Other</div>
+      <div class="skill-group-name">Other</div>
       <div class="skill-list">
-        <div class="skill-item"><div class="skill-dot"></div>Git / GitHub</div>
-        <div class="skill-item"><div class="skill-dot"></div>Jupyter / Quarto</div>
-        <div class="skill-item"><div class="skill-dot"></div>LaTeX</div>
-        <div class="skill-item"><div class="skill-dot"></div>English / Spanish / [Other]</div>
+        <div class="skill-item">Git / GitHub</div>
+        <div class="skill-item">Jupyter / Colab</div>
+        <div class="skill-item">English (C2) · Spanish (Native)</div>
+        <div class="skill-item">French (B1, improving)</div>
       </div>
     </div>
   </div>
-</section>
-
-<div class="divider"></div>
+</div>
 
 <!-- CONTACT -->
-<section id="contact">
-  <div class="section-label">// 04. contact</div>
+<div id="contact" class="page-section">
+  <div class="section-eyebrow">04 — Contact</div>
   <h2 class="section-title">Let's Connect</h2>
-  <div class="contact-wrapper">
-    <div class="contact-text">
-      <p>I'm actively seeking <strong style="color:var(--text); font-style:normal">internship and junior analyst opportunities</strong> in financial analysis, quantitative research, or business intelligence.</p>
-      <br/>
-      <p>If you're working on interesting problems at the intersection of finance and data, I'd love to hear from you.</p>
+  <div class="contact-grid">
+    <div class="contact-prose">
+      <p>I'm actively seeking <strong>internship opportunities</strong> in FP&A, financial analysis, quantitative research or business intelligence — with a particular interest in <strong>banking, fintech, SaaS and AI-driven financial products</strong>.</p>
+      <p>If you're working on interesting problems at the intersection of finance and technology, I'd love to hear from you.</p>
     </div>
     <div class="contact-links">
-      <a href="mailto:you@email.com" class="contact-link">
-        <span class="contact-link-icon">✉️</span>
-        <div class="contact-link-info">
-          <div class="contact-link-label">Email</div>
-          <div class="contact-link-value">you@email.com</div>
+      <a href="mailto:bryan-santiago.martinez-lopez@rennes-sb.com" class="contact-link">
+        <div class="contact-link-left">
+          <span class="contact-link-label">Email</span>
+          <span class="contact-link-value">bryan-santiago.martinez-lopez@rennes-sb.com</span>
         </div>
-        <span style="color:var(--muted); font-size:0.8rem">→</span>
+        <span class="contact-link-arrow">→</span>
       </a>
-      <a href="https://linkedin.com/in/yourprofile" class="contact-link">
-        <span class="contact-link-icon">💼</span>
-        <div class="contact-link-info">
-          <div class="contact-link-label">LinkedIn</div>
-          <div class="contact-link-value">linkedin.com/in/yourprofile</div>
+      <a href="https://www.linkedin.com/in/bryan-santiago-ml/" target="_blank" class="contact-link">
+        <div class="contact-link-left">
+          <span class="contact-link-label">LinkedIn</span>
+          <span class="contact-link-value">linkedin.com/in/bryan-santiago-ml</span>
         </div>
-        <span style="color:var(--muted); font-size:0.8rem">→</span>
+        <span class="contact-link-arrow">→</span>
       </a>
-      <a href="https://github.com/yourusername" class="contact-link">
-        <span class="contact-link-icon">⚙️</span>
-        <div class="contact-link-info">
-          <div class="contact-link-label">GitHub</div>
-          <div class="contact-link-value">github.com/yourusername</div>
+      <a href="https://github.com/BryanSantiagoMartinez" target="_blank" class="contact-link">
+        <div class="contact-link-left">
+          <span class="contact-link-label">GitHub</span>
+          <span class="contact-link-value">github.com/BryanSantiagoMartinez</span>
         </div>
-        <span style="color:var(--muted); font-size:0.8rem">→</span>
+        <span class="contact-link-arrow">→</span>
       </a>
-      <a href="/cv.pdf" class="contact-link">
-        <span class="contact-link-icon">📄</span>
-        <div class="contact-link-info">
-          <div class="contact-link-label">Resume / CV</div>
-          <div class="contact-link-value">Download PDF</div>
+      <a href="Santiago_Martinez_CV.pdf" download class="contact-link">
+        <div class="contact-link-left">
+          <span class="contact-link-label">Resume / CV</span>
+          <span class="contact-link-value">Download PDF</span>
         </div>
-        <span style="color:var(--muted); font-size:0.8rem">↓</span>
+        <span class="contact-link-arrow">↓</span>
       </a>
     </div>
   </div>
-</section>
+</div>
 
 <footer>
-  <span>© 2025 Your Name — Finance & Analytics Portfolio</span>
-  <span>Built with HTML · Hosted on GitHub Pages</span>
+  <span class="footer-copy">© 2025 Santiago Martinez</span>
+  <span class="footer-note">MSc International Finance · ESC Rennes · Paris</span>
 </footer>
-
-</body>
-</html>
