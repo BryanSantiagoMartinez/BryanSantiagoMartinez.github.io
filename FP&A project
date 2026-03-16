@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SaaS FP&A Model — NorthStar</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@300;400;500&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+:root {
+  --bg:      #f7f7f6;
+  --surface: #ffffff;
+  --border:  #e5e5e3;
+  --border2: #d4d4d1;
+  --ink:     #1a1a18;
+  --ink2:    #3d3d3a;
+  --muted:   #8c8c88;
+  --muted2:  #b0b0ac;
+  --green:   #16a34a;
+  --red:     #dc2626;
+}
+body { background:var(--bg); color:var(--ink); font-family:'Geist',sans-serif; font-size:15px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+nav { position:fixed; top:0; width:100%; z-index:100; background:rgba(247,247,246,0.92); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:0 2.5rem; height:52px; display:flex; align-items:center; justify-content:space-between; }
+.nav-logo { font-family:'Geist Mono',monospace; font-size:0.72rem; letter-spacing:0.08em; color:var(--muted); text-decoration:none; transition:color 0.15s; }
+.nav-logo:hover { color:var(--ink); }
+.nav-back { font-family:'Geist Mono',monospace; font-size:0.72rem; letter-spacing:0.06em; color:var(--muted); text-decoration:none; transition:color 0.15s; }
+.nav-back:hover { color:var(--ink); }
+
+.hero { padding:7rem 2.5rem 4rem; max-width:800px; margin:0 auto; border-bottom:1px solid var(--border); }
+.hero-meta-top { display:flex; align-items:center; gap:1.5rem; margin-bottom:2rem; flex-wrap:wrap; }
+.hero-tag { font-family:'Geist Mono',monospace; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); }
+.hero-dot { width:3px; height:3px; border-radius:50%; background:var(--border2); }
+.hero h1 { font-family:'Instrument Serif',serif; font-size:clamp(2.4rem,5vw,3.6rem); font-weight:400; line-height:1.1; letter-spacing:-0.02em; color:var(--ink); margin-bottom:1.4rem; }
+.hero h1 em { font-style:italic; color:var(--muted); }
+.hero-lead { font-size:1.05rem; color:var(--ink2); line-height:1.75; max-width:620px; margin-bottom:2.5rem; }
+.hero-attrs { display:flex; gap:2.5rem; flex-wrap:wrap; }
+.attr { display:flex; flex-direction:column; gap:0.15rem; }
+.attr-label { font-family:'Geist Mono',monospace; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted2); }
+.attr-value { font-size:0.88rem; color:var(--ink2); font-family:'Geist Mono',monospace; }
+
+.metrics-strip { border-bottom:1px solid var(--border); background:var(--surface); }
+.metrics-inner { max-width:800px; margin:0 auto; padding:0 2.5rem; display:grid; grid-template-columns:repeat(4,1fr); }
+.metric { padding:1.6rem 0 1.6rem 1.5rem; border-right:1px solid var(--border); }
+.metric:first-child { padding-left:0; }
+.metric:last-child { border-right:none; }
+.metric-num { font-family:'Instrument Serif',serif; font-size:2rem; font-weight:400; color:var(--ink); line-height:1; margin-bottom:0.3rem; }
+.metric-label { font-family:'Geist Mono',monospace; font-size:0.62rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); }
+
+.page-layout { max-width:800px; margin:0 auto; padding:0 2.5rem; }
+
+.section { padding:4rem 0; border-bottom:1px solid var(--border); }
+.section:last-child { border-bottom:none; }
+.section-num { font-family:'Geist Mono',monospace; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted2); margin-bottom:0.6rem; }
+.section h2 { font-family:'Instrument Serif',serif; font-size:1.7rem; font-weight:400; letter-spacing:-0.01em; color:var(--ink); margin-bottom:1.4rem; line-height:1.2; }
+.prose { color:var(--ink2); font-size:0.97rem; line-height:1.8; margin-bottom:1.2rem; }
+.prose strong { color:var(--ink); font-weight:500; }
+.prose em { font-style:italic; color:var(--muted); }
+
+.pull-quote { margin:2rem 0; padding:1.4rem 0 1.4rem 1.6rem; border-left:2px solid var(--ink); }
+.pull-quote p { font-family:'Instrument Serif',serif; font-size:1.2rem; font-style:italic; color:var(--ink2); line-height:1.6; }
+.pull-quote p strong { font-style:normal; color:var(--ink); }
+
+.data-table { width:100%; border-collapse:collapse; margin:1.8rem 0; font-family:'Geist Mono',monospace; font-size:0.8rem; }
+.data-table thead tr { border-bottom:1px solid var(--ink); }
+.data-table th { padding:0.6rem 0.8rem 0.6rem 0; text-align:left; font-weight:500; color:var(--ink); letter-spacing:0.04em; font-size:0.72rem; text-transform:uppercase; }
+.data-table td { padding:0.6rem 0.8rem 0.6rem 0; color:var(--ink2); border-bottom:1px solid var(--border); }
+.data-table tbody tr:last-child td { border-bottom:none; }
+.val-pos { color:var(--green); }
+.val-neg { color:var(--red); }
+.val-hi  { color:var(--ink); font-weight:500; }
+.val-dim { color:var(--muted2); }
+
+.findings { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); margin:2rem 0; }
+.finding { background:var(--surface); padding:1.6rem; }
+.finding-stat { font-family:'Instrument Serif',serif; font-size:2.2rem; color:var(--ink); line-height:1; margin-bottom:0.5rem; }
+.finding-title { font-family:'Geist Mono',monospace; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem; }
+.finding-body { font-size:0.88rem; color:var(--ink2); line-height:1.6; }
+
+.insight { background:var(--surface); border:1px solid var(--border); padding:1.4rem 1.6rem; margin:1.8rem 0; display:flex; gap:1rem; align-items:flex-start; }
+.insight-icon { font-family:'Geist Mono',monospace; font-size:0.65rem; color:var(--muted2); letter-spacing:0.08em; text-transform:uppercase; padding-top:0.1rem; flex-shrink:0; min-width:2.5rem; }
+.insight-text { font-size:0.93rem; color:var(--ink2); line-height:1.7; }
+.insight-text strong { color:var(--ink); font-weight:500; }
+
+/* Architecture diagram */
+.arch { display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:0; align-items:center; margin:2rem 0; background:var(--surface); border:1px solid var(--border); padding:1.8rem; }
+.arch-box { text-align:center; }
+.arch-box-title { font-family:'Geist Mono',monospace; font-size:0.72rem; font-weight:500; color:var(--ink); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.4rem; }
+.arch-box-sub { font-family:'Geist Mono',monospace; font-size:0.62rem; color:var(--muted); line-height:1.6; }
+.arch-arrow { font-family:'Geist Mono',monospace; font-size:0.9rem; color:var(--muted2); text-align:center; padding:0 1rem; }
+
+/* Pipeline steps */
+.pipeline { display:flex; flex-direction:column; gap:1px; background:var(--border); border:1px solid var(--border); margin:1.8rem 0; }
+.pipeline-step { background:var(--surface); padding:1.2rem 1.6rem; display:grid; grid-template-columns:2rem 1fr; gap:1.2rem; align-items:baseline; }
+.pipeline-num { font-family:'Geist Mono',monospace; font-size:0.68rem; color:var(--muted2); }
+.pipeline-content { }
+.pipeline-title { font-size:0.93rem; font-weight:500; color:var(--ink); margin-bottom:0.2rem; }
+.pipeline-desc { font-size:0.88rem; color:var(--ink2); line-height:1.6; }
+
+/* Dashboard preview placeholder */
+.dashboard-preview { background:var(--surface); border:1px solid var(--border); padding:1.5rem; margin:1.8rem 0; }
+.dashboard-label { font-family:'Geist Mono',monospace; font-size:0.62rem; color:var(--muted2); letter-spacing:0.08em; text-transform:uppercase; text-align:center; margin-top:1rem; }
+
+/* KPI row */
+.kpi-row { display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:1px; }
+.kpi-box { background:var(--surface); padding:0.9rem 1rem; text-align:center; }
+.kpi-num { font-family:'Instrument Serif',serif; font-size:1.1rem; color:var(--ink); }
+.kpi-lbl { font-family:'Geist Mono',monospace; font-size:0.58rem; color:var(--muted2); letter-spacing:0.06em; text-transform:uppercase; margin-top:0.2rem; }
+
+/* Chart grid */
+.chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); }
+.chart-box { background:var(--surface); padding:1.2rem; }
+.chart-title { font-family:'Geist Mono',monospace; font-size:0.65rem; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.8rem; }
+
+/* Limit list */
+.limit-list { list-style:none; margin:1rem 0; }
+.limit-list li { padding:0.9rem 0; border-bottom:1px solid var(--border); display:grid; grid-template-columns:8rem 1fr; gap:1rem; align-items:baseline; }
+.limit-list li:last-child { border-bottom:none; }
+.limit-tag { font-family:'Geist Mono',monospace; font-size:0.68rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); }
+.limit-text { font-size:0.92rem; color:var(--ink2); line-height:1.6; }
+.limit-text strong { color:var(--ink); font-weight:500; }
+
+/* Bottom */
+.page-bottom { max-width:800px; margin:0 auto; padding:2rem 2.5rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); }
+.btn { font-family:'Geist Mono',monospace; font-size:0.72rem; letter-spacing:0.06em; padding:0.55rem 1.1rem; border-radius:3px; text-decoration:none; transition:all 0.15s; }
+.btn-ghost { border:1px solid var(--border); color:var(--muted); }
+.btn-ghost:hover { border-color:var(--ink); color:var(--ink); }
+.btn-solid { background:var(--ink); color:#f7f7f6; border:1px solid var(--ink); }
+.btn-solid:hover { background:var(--ink2); }
+
+/* TOC */
+@media (min-width:1200px) {
+  .page-layout { max-width:1050px; display:grid; grid-template-columns:1fr 180px; gap:4rem; align-items:start; }
+  .toc-sidebar { position:sticky; top:70px; padding-top:4rem; }
+  .toc-label { font-family:'Geist Mono',monospace; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted2); margin-bottom:0.8rem; }
+  .toc-link { display:block; font-family:'Geist Mono',monospace; font-size:0.7rem; color:var(--muted2); text-decoration:none; padding:0.3rem 0 0.3rem 0.7rem; margin-left:-0.7rem; border-left:1px solid transparent; transition:all 0.15s; }
+  .toc-link:hover, .toc-link.active { color:var(--ink); border-left-color:var(--ink); }
+}
+@media (max-width:1199px) { .toc-sidebar { display:none; } }
+@media (max-width:700px) {
+  .hero, .page-layout { padding-left:1.5rem; padding-right:1.5rem; }
+  .metrics-inner { grid-template-columns:1fr 1fr; padding:0 1.5rem; }
+  .findings, .kpi-row, .chart-grid { grid-template-columns:1fr; }
+  .arch { grid-template-columns:1fr; gap:0.5rem; }
+  .arch-arrow { transform:rotate(90deg); }
+  .limit-list li { grid-template-columns:1fr; gap:0.2rem; }
+  .page-bottom { flex-direction:column; gap:1rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">portfolio.finance</a>
+  <a href="index.html#projects" class="nav-back">← Projects</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-meta-top">
+    <span class="hero-tag">FP&A</span>
+    <div class="hero-dot"></div>
+    <span class="hero-tag">SQL · Excel · Power BI</span>
+    <div class="hero-dot"></div>
+    <span class="hero-tag">2025</span>
+  </div>
+  <h1>SaaS FP&A Model —<br/><em>NorthStar</em></h1>
+  <p class="hero-lead">
+    A full-stack financial planning and analysis project built from scratch —
+    from a simulated transactional database to a three-statement financial model
+    and an executive Power BI dashboard. Modeled 500 customers, 36 months of
+    MRR dynamics, and scenario analysis across a complete SaaS business cycle.
+  </p>
+  <div class="hero-attrs">
+    <div class="attr"><span class="attr-label">Company</span><span class="attr-value">NorthStar SaaS (simulated)</span></div>
+    <div class="attr"><span class="attr-label">Period</span><span class="attr-value">2022 – 2024</span></div>
+    <div class="attr"><span class="attr-label">Stack</span><span class="attr-value">SQLite · Python · Excel · Power BI</span></div>
+    <div class="attr"><span class="attr-label">Customers</span><span class="attr-value">500 · 3 plans · 7 countries</span></div>
+  </div>
+</div>
+
+<!-- METRICS -->
+<div class="metrics-strip">
+  <div class="metrics-inner">
+    <div class="metric">
+      <div class="metric-num">$8.7M</div>
+      <div class="metric-label">Final ARR</div>
+    </div>
+    <div class="metric">
+      <div class="metric-num">111.6%</div>
+      <div class="metric-label">Latest NRR</div>
+    </div>
+    <div class="metric">
+      <div class="metric-num">2.18%</div>
+      <div class="metric-label">Avg Churn Rate</div>
+    </div>
+    <div class="metric">
+      <div class="metric-num">40K</div>
+      <div class="metric-label">Subscription Rows</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="page-layout">
+<div>
+
+  <!-- 01 — CONTEXT -->
+  <div class="section" id="context">
+    <div class="section-num">01 — Context</div>
+    <h2>The business problem this project solves</h2>
+    <p class="prose">
+      Most finance portfolios show either a spreadsheet model or a dashboard — rarely both,
+      and almost never the data pipeline that connects them. This project builds the full stack:
+      a <strong>SQLite operational database</strong> that feeds a <strong>three-statement Excel model</strong>
+      that feeds a <strong>Power BI executive dashboard</strong>.
+    </p>
+    <p class="prose">
+      NorthStar SaaS is a fictional B2B software company with three subscription tiers,
+      500 customers across seven countries, and a deliberate three-act financial narrative:
+      strong growth in 2022, market pressure in 2023, and recovery in 2024.
+      The dataset was designed to tell a story that requires explanation —
+      not a straight line up and to the right.
+    </p>
+    <div class="pull-quote">
+      <p><strong>The most important skill in FP&A is not building models — it is knowing
+      what story the numbers are telling</strong> and being able to explain why they changed.</p>
+    </div>
+
+    <!-- Architecture -->
+    <div class="arch">
+      <div class="arch-box">
+        <div class="arch-box-title">SQL</div>
+        <div class="arch-box-sub">SQLite database<br/>4 tables · 40K rows<br/>Python-generated</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">
+        <div class="arch-box-title">Excel</div>
+        <div class="arch-box-sub">3-statement model<br/>P&L · Balance · CF<br/>Scenario toggle</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">
+        <div class="arch-box-title">Power BI</div>
+        <div class="arch-box-sub">Executive dashboard<br/>DAX measures<br/>5 KPI cards</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 — DATABASE -->
+  <div class="section" id="database">
+    <div class="section-num">02 — SQL Database</div>
+    <h2>Building the source of truth</h2>
+    <p class="prose">
+      The database was built in SQLite using Python — four tables that mirror how a real
+      SaaS finance team structures its data warehouse. Each table has a specific role
+      in the financial model.
+    </p>
+
+    <table class="data-table">
+      <thead><tr><th>Table</th><th>Rows</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td class="val-hi">customers</td><td>500</td><td>Master customer list — plan, country, acquisition date, CSM owner</td></tr>
+        <tr><td class="val-hi">subscriptions</td><td>40,506</td><td>One row per customer per active month — MRR and status (new, active, expansion, contraction, churned)</td></tr>
+        <tr><td class="val-hi">expenses</td><td>2,160</td><td>Monthly operating costs by category — COGS, S&M, R&D, G&A</td></tr>
+        <tr><td class="val-hi">headcount</td><td>864</td><td>Monthly headcount and fully-loaded salary cost by department</td></tr>
+      </tbody>
+    </table>
+
+    <p class="prose">
+      The <strong>subscriptions table is the financial core</strong> of the model. Each row
+      captures a customer's status in a given month — and the combination of all rows
+      produces the MRR waterfall that drives every downstream calculation.
+      Churn rates were deliberately varied by year to create a non-trivial dataset:
+      1.8% monthly in 2022, 4.2% in 2023, and 2.4% in 2024.
+    </p>
+
+    <div class="insight">
+      <span class="insight-icon">SQL</span>
+      <p class="insight-text">
+        The most complex query in the project was the <strong>NRR calculation</strong> —
+        a self-join that compares each customer's MRR against their own MRR exactly
+        12 months prior, excluding new customers entirely. This required a CTE combined
+        with a DATE offset join: <em>ON c.month = DATE(t.month, '+12 months')</em>.
+      </p>
+    </div>
+
+    <p class="prose">Five analytical views were exported as CSVs and loaded into Excel:</p>
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <span class="pipeline-num">01</span>
+        <div class="pipeline-content">
+          <div class="pipeline-title">mrr_summary — monthly MRR, active customers, avg MRR per customer</div>
+          <div class="pipeline-desc">Base revenue view. Foundation for the P&L revenue block.</div>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <span class="pipeline-num">02</span>
+        <div class="pipeline-content">
+          <div class="pipeline-title">mrr_movement — new, expansion, contraction, churned MRR by month</div>
+          <div class="pipeline-desc">MRR waterfall decomposition. Powers the movement chart in Power BI.</div>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <span class="pipeline-num">03</span>
+        <div class="pipeline-content">
+          <div class="pipeline-title">churn_rate — monthly churn rate percentage</div>
+          <div class="pipeline-desc">Retention health metric. Confirms the 2023 stress narrative.</div>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <span class="pipeline-num">04</span>
+        <div class="pipeline-content">
+          <div class="pipeline-title">nrr — net revenue retention by month (Jan 2023 onward)</div>
+          <div class="pipeline-desc">Requires 12 months of history — available from Jan 2023.</div>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <span class="pipeline-num">05</span>
+        <div class="pipeline-content">
+          <div class="pipeline-title">ltv_cac — lifetime value and CAC ratio by plan</div>
+          <div class="pipeline-desc">Unit economics by segment. Enterprise LTV/CAC: 35x.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 — EXCEL MODEL -->
+  <div class="section" id="excel">
+    <div class="section-num">03 — Excel Financial Model</div>
+    <h2>Three-statement model with scenario analysis</h2>
+    <p class="prose">
+      The Excel model follows a strict one-directional data flow across four tabs —
+      a standard in investment banking and FP&A that prevents circular references
+      and makes the model auditable.
+    </p>
+
+    <table class="data-table">
+      <thead><tr><th>Tab</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td class="val-hi">DATA</td><td>Raw CSV imports — never edited directly. Single source of truth.</td></tr>
+        <tr><td class="val-hi">ASSUMPTIONS</td><td>All editable inputs: pricing, churn rates, CAC, salaries, scenario toggle.</td></tr>
+        <tr><td class="val-hi">P&L</td><td>36-month income statement with KPI block. All formulas reference ASSUMPTIONS.</td></tr>
+        <tr><td class="val-hi">DASHBOARD</td><td>Charts and summary table for presentation.</td></tr>
+      </tbody>
+    </table>
+
+    <p class="prose">
+      The scenario toggle in ASSUMPTIONS drives two multipliers — Revenue and Cost —
+      that cascade through every formula in the P&L via a single cell reference.
+      Switching from Base to Bull increases revenue by 15% and costs by 5% across
+      all 36 months simultaneously.
+    </p>
+
+    <div class="pull-quote">
+      <p>The key design principle: <strong>every number that could change lives in ASSUMPTIONS.
+      No hardcoded values inside formulas.</strong> This is what makes a model
+      maintainable and trustworthy in a real finance team.</p>
+    </div>
+
+    <p class="prose">Key P&L findings across the three scenarios:</p>
+
+    <table class="data-table">
+      <thead><tr><th>Metric</th><th>Jan 2022</th><th>Jan 2023</th><th>Dec 2024</th></tr></thead>
+      <tbody>
+        <tr><td>Total MRR</td><td>$693</td><td>$279,806</td><td>$528,586</td></tr>
+        <tr><td class="val-hi">EBITDA</td><td class="val-neg">$(23,649)</td><td class="val-pos">$50,162</td><td class="val-pos">$94,762</td></tr>
+        <tr><td>Gross Margin</td><td>81.7%</td><td>81.7%</td><td>81.7%</td></tr>
+        <tr><td class="val-hi">Churn Rate</td><td class="val-dim">0.00%</td><td class="val-neg">4.58%</td><td class="val-pos">2.05%</td></tr>
+        <tr><td class="val-hi">NRR</td><td class="val-dim">—</td><td>100.0%</td><td class="val-pos">118.0%</td></tr>
+      </tbody>
+    </table>
+
+    <div class="insight">
+      <span class="insight-icon">Note</span>
+      <p class="insight-text">
+        <strong>Jan 2022 shows negative EBITDA of $(23,649)</strong> — a deliberate model decision.
+        Fixed cost floors were added to S&M ($15K minimum) and G&A ($8K minimum) using
+        MAX() functions, ensuring costs reflect real pre-revenue investment rather than
+        scaling to zero with MRR.
+      </p>
+    </div>
+  </div>
+
+  <!-- 04 — POWER BI -->
+  <div class="section" id="powerbi">
+    <div class="section-num">04 — Power BI Dashboard</div>
+    <h2>Translating the model into executive communication</h2>
+    <p class="prose">
+      The dashboard was built directly on top of the Excel analytical views,
+      with DAX measures handling all dynamic calculations. The design
+      prioritizes the narrative over decoration — every visual answers
+      a specific question a CFO or investor would ask.
+    </p>
+
+    <!-- Dashboard preview (SVG representation) -->
+    <div class="dashboard-preview">
+      <!-- KPI row -->
+      <div class="kpi-row">
+        <div class="kpi-box"><div class="kpi-num">$726,085</div><div class="kpi-lbl">Latest MRR</div></div>
+        <div class="kpi-box"><div class="kpi-num">$8,713,023</div><div class="kpi-lbl">ARR</div></div>
+        <div class="kpi-box"><div class="kpi-num">6,584</div><div class="kpi-lbl">Active Customers</div></div>
+        <div class="kpi-box"><div class="kpi-num">2.18%</div><div class="kpi-lbl">Avg Churn Rate</div></div>
+        <div class="kpi-box"><div class="kpi-num">111.60%</div><div class="kpi-lbl">Latest NRR</div></div>
+      </div>
+      <!-- Chart grid -->
+      <div class="chart-grid">
+        <div class="chart-box">
+          <div class="chart-title">Monthly Recurring Revenue — 2022 to 2024</div>
+          <svg viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+            <line x1="20" y1="10" x2="20" y2="100" stroke="#e5e5e3" stroke-width="1"/>
+            <line x1="20" y1="100" x2="290" y2="100" stroke="#e5e5e3" stroke-width="1"/>
+            <polyline points="20,98 50,92 80,84 110,72 140,58 170,45 200,35 230,24 260,16 290,10"
+              fill="none" stroke="#1a1a18" stroke-width="2"/>
+            <text x="20" y="110" font-family="Geist Mono,monospace" font-size="7" fill="#b0b0ac">2022</text>
+            <text x="130" y="110" font-family="Geist Mono,monospace" font-size="7" fill="#b0b0ac">2023</text>
+            <text x="240" y="110" font-family="Geist Mono,monospace" font-size="7" fill="#b0b0ac">2024</text>
+          </svg>
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">Monthly Churn Rate %</div>
+          <svg viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+            <line x1="20" y1="10" x2="20" y2="100" stroke="#e5e5e3" stroke-width="1"/>
+            <line x1="20" y1="100" x2="290" y2="100" stroke="#e5e5e3" stroke-width="1"/>
+            <polyline points="20,98 40,95 60,90 80,60 100,85 120,55 140,50 160,52 180,48 200,55 220,50 240,60 260,55 280,65 290,80"
+              fill="#1a1a18" fill-opacity="0.06" stroke="#1a1a18" stroke-width="1.5"/>
+            <line x1="20" y1="72" x2="290" y2="72" stroke="#dc2626" stroke-width="1" stroke-dasharray="4,3"/>
+            <text x="250" y="69" font-family="Geist Mono,monospace" font-size="6.5" fill="#dc2626">2.0% ref</text>
+          </svg>
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">MRR Movement</div>
+          <svg viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+            <line x1="20" y1="100" x2="290" y2="100" stroke="#e5e5e3" stroke-width="1"/>
+            <g opacity="0.85">
+              <rect x="25" y="70" width="8" height="30" fill="#16a34a"/>
+              <rect x="35" y="55" width="8" height="45" fill="#2563eb"/>
+              <rect x="45" y="88" width="8" height="12" fill="#f97316"/>
+              <rect x="60" y="65" width="8" height="35" fill="#16a34a"/>
+              <rect x="70" y="48" width="8" height="52" fill="#2563eb"/>
+              <rect x="80" y="82" width="8" height="18" fill="#f97316"/>
+              <rect x="95" y="60" width="8" height="40" fill="#16a34a"/>
+              <rect x="105" y="38" width="8" height="62" fill="#2563eb"/>
+              <rect x="115" y="75" width="8" height="25" fill="#f97316"/>
+              <rect x="130" y="55" width="8" height="45" fill="#16a34a"/>
+              <rect x="140" y="28" width="8" height="72" fill="#2563eb"/>
+              <rect x="150" y="68" width="8" height="32" fill="#f97316"/>
+            </g>
+          </svg>
+        </div>
+        <div class="chart-box">
+          <div class="chart-title">Net Revenue Retention %</div>
+          <svg viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+            <line x1="20" y1="10" x2="20" y2="100" stroke="#e5e5e3" stroke-width="1"/>
+            <line x1="20" y1="100" x2="290" y2="100" stroke="#e5e5e3" stroke-width="1"/>
+            <line x1="20" y1="88" x2="290" y2="88" stroke="#dc2626" stroke-width="1" stroke-dasharray="4,3"/>
+            <text x="230" y="85" font-family="Geist Mono,monospace" font-size="6.5" fill="#dc2626">Breakeven 100%</text>
+            <polyline points="20,60 50,42 80,38 110,40 140,35 170,30 200,38 230,42 260,45 290,48"
+              fill="none" stroke="#1a1a18" stroke-width="2"/>
+            <text x="22" y="110" font-family="Geist Mono,monospace" font-size="7" fill="#b0b0ac">Jan 2023</text>
+            <text x="240" y="110" font-family="Geist Mono,monospace" font-size="7" fill="#b0b0ac">Oct 2024</text>
+          </svg>
+        </div>
+      </div>
+      <div class="dashboard-label">Power BI Executive Dashboard · NorthStar SaaS · 2022–2024</div>
+    </div>
+
+    <p class="prose">
+      Four DAX measures were created to drive the dynamic KPI cards:
+      <strong>Latest MRR</strong> (LASTDATE filter), <strong>ARR</strong> (Latest MRR × 12),
+      <strong>MoM Change</strong> (DATEADD offset), and <strong>Latest NRR</strong>
+      (LASTDATE on the NRR table). The Breakeven reference line at 100% on the NRR chart
+      is the single most important visual element — it shows at a glance that
+      NorthStar never needed new customers to sustain growth.
+    </p>
+  </div>
+
+  <!-- 05 — FINDINGS -->
+  <div class="section" id="findings">
+    <div class="section-num">05 — Key Findings</div>
+    <h2>What the data demonstrated</h2>
+    <div class="findings">
+      <div class="finding">
+        <div class="finding-stat">111.6%</div>
+        <div class="finding-title">Final NRR</div>
+        <p class="finding-body">NorthStar's existing customer base grew 11.6% annually without a single new acquisition. Expansion MRR consistently outpaced churn MRR from mid-2022 onward.</p>
+      </div>
+      <div class="finding">
+        <div class="finding-stat">4.58%</div>
+        <div class="finding-title">Peak churn — Jan 2023</div>
+        <p class="finding-body">The 2023 stress year is clearly visible in the data. Churn more than doubled from the 2022 baseline, yet total MRR continued growing — evidence that new and expansion MRR absorbed the losses.</p>
+      </div>
+      <div class="finding">
+        <div class="finding-stat">$(23K)</div>
+        <div class="finding-title">EBITDA in Month 1</div>
+        <p class="finding-body">Negative EBITDA in January 2022 reflects realistic pre-revenue investment. Fixed cost floors in S&M and G&A prevent the model from showing false profitability at near-zero revenue.</p>
+      </div>
+      <div class="finding">
+        <div class="finding-stat">35x</div>
+        <div class="finding-title">Enterprise LTV/CAC</div>
+        <p class="finding-body">Enterprise customers generate 35x their acquisition cost over their lifetime. Even with simplified CAC assumptions, the unit economics confirm Enterprise as the most capital-efficient segment.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 — LIMITATIONS -->
+  <div class="section" id="limitations">
+    <div class="section-num">06 — Limitations & Extensions</div>
+    <h2>What this model does not do</h2>
+    <ul class="limit-list">
+      <li>
+        <span class="limit-tag">Balance Sheet</span>
+        <span class="limit-text">The model covers P&L only. A complete 3-statement model would add a Balance Sheet (cash, deferred revenue, equity) and Cash Flow Statement linked to P&L line items.</span>
+      </li>
+      <li>
+        <span class="limit-tag">Deferred Revenue</span>
+        <span class="limit-text"><strong>Annual prepayments are not modeled.</strong> In a real SaaS model, customers who pay annually create a deferred revenue liability that unwinds monthly — this affects the Balance Sheet and Cash Flow significantly.</span>
+      </li>
+      <li>
+        <span class="limit-tag">Cohort Analysis</span>
+        <span class="limit-text">Churn rate is calculated at the aggregate level. A production model would track retention by acquisition cohort — revealing whether newer customers churn faster or slower than older ones.</span>
+      </li>
+      <li>
+        <span class="limit-tag">CAC Derivation</span>
+        <span class="limit-text">CAC is currently a fixed benchmark assumption. In a rigorous model it would be calculated dynamically as <strong>total S&M spend divided by new customers acquired</strong> — pulling directly from the expenses table.</span>
+      </li>
+      <li>
+        <span class="limit-tag">Next Step</span>
+        <span class="limit-text"><strong>Module 2:</strong> Add Balance Sheet and Cash Flow Statement to complete the three-statement model, with deferred revenue waterfall and operating cash conversion metrics.</span>
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+<aside class="toc-sidebar">
+  <div class="toc-label">Contents</div>
+  <a href="#context"  class="toc-link">01  Context</a>
+  <a href="#database" class="toc-link">02  SQL Database</a>
+  <a href="#excel"    class="toc-link">03  Excel Model</a>
+  <a href="#powerbi"  class="toc-link">04  Power BI</a>
+  <a href="#findings" class="toc-link">05  Findings</a>
+  <a href="#limitations" class="toc-link">06  Limitations</a>
+</aside>
+
+</div>
+
+<div class="page-bottom">
+  <a href="index.html#projects" class="btn btn-ghost">← All Projects</a>
+  <div style="display:flex;gap:0.6rem;">
+    <a href="#" class="btn btn-ghost">GitHub →</a>
+    <a href="#" class="btn btn-solid">Open Notebook →</a>
+  </div>
+</div>
+
+<script>
+const sections = document.querySelectorAll('.section[id]');
+const links = document.querySelectorAll('.toc-link');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const a = document.querySelector(`.toc-link[href="#${e.target.id}"]`);
+      if (a) a.classList.add('active');
+    }
+  });
+}, { rootMargin: '-15% 0px -75% 0px' });
+sections.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
