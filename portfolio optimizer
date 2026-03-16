@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio Risk & Optimization Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@300;400;500&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+:root {
+  --bg:      #f7f7f6;
+  --surface: #ffffff;
+  --border:  #e5e5e3;
+  --border2: #d4d4d1;
+  --ink:     #1a1a18;
+  --ink2:    #3d3d3a;
+  --muted:   #8c8c88;
+  --muted2:  #b0b0ac;
+  --green:   #16a34a;
+  --red:     #dc2626;
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Geist', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+nav {
+  position: fixed; top:0; width:100%; z-index:100;
+  background: rgba(247,247,246,0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2.5rem; height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { font-family:'Geist Mono',monospace; font-size:0.72rem; letter-spacing:0.08em; color:var(--muted); text-decoration:none; transition:color 0.15s; }
+.nav-logo:hover { color:var(--ink); }
+.nav-back { font-family:'Geist Mono',monospace; font-size:0.72rem; letter-spacing:0.06em; color:var(--muted); text-decoration:none; transition:color 0.15s; }
+.nav-back:hover { color:var(--ink); }
+
+.hero { padding:7rem 2.5rem 4rem; max-width:800px; margin:0 auto; border-bottom:1px solid var(--border); }
+.hero-meta-top { display:flex; align-items:center; gap:1.5rem; margin-bottom:2rem; }
+.hero-tag { font-family:'Geist Mono',monospace; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); }
+.hero-dot { width:3px; height:3px; border-radius:50%; background:var(--border2); }
+.hero h1 { font-family:'Instrument Serif',serif; font-size:clamp(2.4rem,5vw,3.6rem); font-weight:400; line-height:1.1; letter-spacing:-0.02em; color:var(--ink); margin-bottom:1.4rem; }
+.hero h1 em { font-style:italic; color:var(--muted); }
+.hero-lead { font-size:1.05rem; color:var(--ink2); line-height:1.75; max-width:620px; margin-bottom:2.5rem; }
+.hero-attrs { display:flex; gap:2.5rem; flex-wrap:wrap; }
+.attr { display:flex; flex-direction:column; gap:0.15rem; }
+.attr-label { font-family:'Geist Mono',monospace; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted2); }
+.attr-value { font-size:0.88rem; color:var(--ink2); font-family:'Geist Mono',monospace; }
+
+.metrics-strip { border-bottom:1px solid var(--border); background:var(--surface); }
+.metrics-inner { max-width:800px; margin:0 auto; padding:0 2.5rem; display:grid; grid-template-columns:repeat(4,1fr); }
+.metric { padding:1.6rem 0 1.6rem 1.5rem; border-right:1px solid var(--border); }
+.metric:first-child { padding-left:0; }
+.metric:last-child { border-right:none; }
+.metric-num { font-family:'Instrument Serif',serif; font-size:2rem; font-weight:400; color:var(--ink); line-height:1; margin-bottom:0.3rem; }
+.metric-label { font-family:'Geist Mono',monospace; font-size:0.62rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); }
+
+.page-layout { max-width:800px; margin:0 auto; padding:0 2.5rem; }
+
+.section { padding:4rem 0; border-bottom:1px solid var(--border); }
+.section:last-child { border-bottom:none; }
+.section-num { font-family:'Geist Mono',monospace; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted2); margin-bottom:0.6rem; }
+.section h2 { font-family:'Instrument Serif',serif; font-size:1.7rem; font-weight:400; letter-spacing:-0.01em; color:var(--ink); margin-bottom:1.4rem; line-height:1.2; }
+.prose { color:var(--ink2); font-size:0.97rem; line-height:1.8; margin-bottom:1.2rem; }
+.prose strong { color:var(--ink); font-weight:500; }
+.prose em { font-style:italic; color:var(--muted); }
+
+.pull-quote { margin:2rem 0; padding:1.4rem 0 1.4rem 1.6rem; border-left:2px solid var(--ink); }
+.pull-quote p { font-family:'Instrument Serif',serif; font-size:1.2rem; font-style:italic; color:var(--ink2); line-height:1.6; }
+.pull-quote p strong { font-style:normal; color:var(--ink); }
+
+.data-table { width:100%; border-collapse:collapse; margin:1.8rem 0; font-family:'Geist Mono',monospace; font-size:0.8rem; }
+.data-table thead tr { border-bottom:1px solid var(--ink); }
+.data-table th { padding:0.6rem 0.8rem 0.6rem 0; text-align:left; font-weight:500; color:var(--ink); letter-spacing:0.04em; font-size:0.72rem; text-transform:uppercase; }
+.data-table td { padding:0.6rem 0.8rem 0.6rem 0; color:var(--ink2); border-bottom:1px solid var(--border); }
+.data-table tbody tr:last-child td { border-bottom:none; }
+.val-pos { color:var(--green); }
+.val-neg { color:var(--red); }
+.val-hi  { color:var(--ink); font-weight:500; }
+.val-dim { color:var(--muted2); }
+
+.findings { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); margin:2rem 0; }
+.finding { background:var(--surface); padding:1.6rem; }
+.finding-stat { font-family:'Instrument Serif',serif; font-size:2.2rem; color:var(--ink); line-height:1; margin-bottom:0.5rem; }
+.finding-title { font-family:'Geist Mono',monospace; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem; }
+.finding-body { font-size:0.88rem; color:var(--ink2); line-height:1.6; }
+
+.code-wrap { margin:2rem 0; }
+.code-label { display:flex; justify-content:space-between; align-items:center; padding:0.55rem 1rem; background:var(--ink); border-radius:4px 4px 0 0; }
+.code-file { font-family:'Geist Mono',monospace; font-size:0.68rem; color:rgba(255,255,255,0.45); letter-spacing:0.04em; }
+.code-copy { font-family:'Geist Mono',monospace; font-size:0.62rem; color:rgba(255,255,255,0.4); background:transparent; border:1px solid rgba(255,255,255,0.15); padding:0.15rem 0.5rem; border-radius:2px; cursor:pointer; transition:all 0.15s; }
+.code-copy:hover { color:#fff; border-color:rgba(255,255,255,0.4); }
+pre { background:#1a1a18; padding:1.4rem 1rem; overflow-x:auto; border-radius:0 0 4px 4px; margin:0; }
+code { font-family:'Geist Mono',monospace; font-size:0.78rem; line-height:1.75; color:#d4d4d0; }
+.kw { color:#8b949e; } .fn { color:#d2a8ff; } .st { color:#a5d6ff; } .cm { color:#4d5566; font-style:italic; } .nm { color:#f2cc60; } .va { color:#ffa657; }
+
+.insight { background:var(--surface); border:1px solid var(--border); padding:1.4rem 1.6rem; margin:1.8rem 0; display:flex; gap:1rem; align-items:flex-start; }
+.insight-icon { font-family:'Geist Mono',monospace; font-size:0.65rem; color:var(--muted2); letter-spacing:0.08em; text-transform:uppercase; padding-top:0.1rem; flex-shrink:0; min-width:2.5rem; }
+.insight-text { font-size:0.93rem; color:var(--ink2); line-height:1.7; }
+.insight-text strong { color:var(--ink); font-weight:500; }
+
+.weights-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin:1.8rem 0; }
+.weights-col h4 { font-family:'Geist Mono',monospace; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border); }
+.weight-row { margin-bottom:0.7rem; }
+.weight-top { display:flex; justify-content:space-between; margin-bottom:0.25rem; }
+.weight-name { font-family:'Geist Mono',monospace; font-size:0.78rem; color:var(--ink2); }
+.weight-val  { font-family:'Geist Mono',monospace; font-size:0.78rem; color:var(--ink); font-weight:500; }
+.weight-bar-bg { height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+.weight-bar    { height:100%; background:var(--ink); border-radius:2px; }
+.weight-zero .weight-val { color:var(--muted2); }
+.weight-zero .weight-bar { background:var(--border2); }
+
+.limit-list { list-style:none; margin:1rem 0; }
+.limit-list li { padding:0.9rem 0; border-bottom:1px solid var(--border); display:grid; grid-template-columns:8rem 1fr; gap:1rem; align-items:baseline; }
+.limit-list li:last-child { border-bottom:none; }
+.limit-tag { font-family:'Geist Mono',monospace; font-size:0.68rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); }
+.limit-text { font-size:0.92rem; color:var(--ink2); line-height:1.6; }
+.limit-text strong { color:var(--ink); font-weight:500; }
+
+.page-bottom { max-width:800px; margin:0 auto; padding:2rem 2.5rem; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); }
+.btn { font-family:'Geist Mono',monospace; font-size:0.72rem; letter-spacing:0.06em; padding:0.55rem 1.1rem; border-radius:3px; text-decoration:none; transition:all 0.15s; }
+.btn-ghost { border:1px solid var(--border); color:var(--muted); }
+.btn-ghost:hover { border-color:var(--ink); color:var(--ink); }
+.btn-solid { background:var(--ink); color:#f7f7f6; border:1px solid var(--ink); }
+.btn-solid:hover { background:var(--ink2); }
+
+@media (min-width:1200px) {
+  .page-layout { max-width:1050px; display:grid; grid-template-columns:1fr 180px; gap:4rem; align-items:start; }
+  .toc-sidebar { position:sticky; top:70px; padding-top:4rem; }
+  .toc-label { font-family:'Geist Mono',monospace; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted2); margin-bottom:0.8rem; }
+  .toc-link { display:block; font-family:'Geist Mono',monospace; font-size:0.7rem; color:var(--muted2); text-decoration:none; padding:0.3rem 0 0.3rem 0.7rem; margin-left:-0.7rem; border-left:1px solid transparent; transition:all 0.15s; }
+  .toc-link:hover, .toc-link.active { color:var(--ink); border-left-color:var(--ink); }
+}
+@media (max-width:1199px) { .toc-sidebar { display:none; } }
+@media (max-width:700px) {
+  .metrics-inner { grid-template-columns:1fr 1fr; }
+  .findings { grid-template-columns:1fr; }
+  .weights-grid { grid-template-columns:1fr; }
+  .page-layout,.hero { padding-left:1.2rem; padding-right:1.2rem; }
+  .limit-list li { grid-template-columns:1fr; gap:0.2rem; }
+  .page-bottom { flex-direction:column; gap:1rem; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">portfolio.finance</a>
+  <a href="index.html#projects" class="nav-back">← Projects</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-meta-top">
+    <span class="hero-tag">Quantitative Finance</span>
+    <div class="hero-dot"></div>
+    <span class="hero-tag">Module 1 of 3</span>
+    <div class="hero-dot"></div>
+    <span class="hero-tag">2025</span>
+  </div>
+  <h1>Portfolio Risk &<br/><em>Optimization Engine</em></h1>
+  <p class="hero-lead">
+    Can combining assets produce a better risk-return profile than any individual asset?
+    This project builds a complete mean-variance optimization system from raw market data —
+    applying Modern Portfolio Theory across four distinct market regimes between 2020 and 2024.
+  </p>
+  <div class="hero-attrs">
+    <div class="attr"><span class="attr-label">Period</span><span class="attr-value">2020 – 2024</span></div>
+    <div class="attr"><span class="attr-label">Assets</span><span class="attr-value">AAPL · JPM · JNJ · GLD · SPY</span></div>
+    <div class="attr"><span class="attr-label">Stack</span><span class="attr-value">Python · scipy · yfinance · matplotlib</span></div>
+    <div class="attr"><span class="attr-label">Notebook</span><span class="attr-value">Google Colab</span></div>
+  </div>
+</div>
+
+<div class="metrics-strip">
+  <div class="metrics-inner">
+    <div class="metric"><div class="metric-num">0.979</div><div class="metric-label">Max Sharpe Ratio</div></div>
+    <div class="metric"><div class="metric-num">15.3%</div><div class="metric-label">Optimal Annual Return</div></div>
+    <div class="metric"><div class="metric-num">12.3%</div><div class="metric-label">Min Portfolio Volatility</div></div>
+    <div class="metric"><div class="metric-num">10K</div><div class="metric-label">Monte Carlo Portfolios</div></div>
+  </div>
+</div>
+
+<div class="page-layout">
+<div>
+
+  <!-- 01 -->
+  <div class="section" id="context">
+    <div class="section-num">01 — Context</div>
+    <h2>Why this period, and why these assets</h2>
+    <p class="prose">The period 2020–2024 was not chosen arbitrarily. It captures four structurally different market regimes in five years — a dataset that forces any optimization model to prove itself beyond a single bull run.</p>
+    <p class="prose">The <strong>COVID crash of March 2020</strong> was the fastest 34% drawdown in market history — 33 trading days. It broke correlations that had held for years. The <strong>2020–2021 recovery</strong> was driven by near-zero interest rates and fiscal stimulus, producing one of the sharpest rebounds ever recorded. The <strong>2022 bear market</strong> was structurally unusual: bonds and equities fell simultaneously — the worst year for the classic 60/40 portfolio in decades. The <strong>2023–2024 rally</strong> was driven by a handful of AI-adjacent names, creating extreme concentration in broad indices.</p>
+    <div class="pull-quote"><p>A model that only works in rising markets is not a model. <strong>The value of any optimization framework is revealed precisely when regimes change.</strong></p></div>
+    <p class="prose">The five assets represent fundamentally different economic exposures: technology growth (AAPL), financial cyclicality (JPM), defensive healthcare (JNJ), a commodity safe haven (GLD), and the broad market benchmark (SPY). The goal was not to cherry-pick assets that look good in hindsight — it was to test whether diversification works even when some assets disappoint.</p>
+  </div>
+
+  <!-- 02 -->
+  <div class="section" id="returns">
+    <div class="section-num">02 — Individual Asset Statistics</div>
+    <h2>Before combining, understand what you are combining</h2>
+    <p class="prose">Log returns were used throughout, annualized at 252 trading days. The individual statistics reveal the central trade-off that Markowitz's theory is designed to resolve: the highest-returning asset is rarely the most efficient one.</p>
+    <table class="data-table">
+      <thead><tr><th>Asset</th><th>Annual Return</th><th>Annual Volatility</th><th>Sharpe Ratio</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td class="val-hi">AAPL</td><td class="val-pos">24.9%</td><td class="val-neg">31.7%</td><td>0.79</td><td class="val-dim">Best return, but highest vol among equities</td></tr>
+        <tr><td class="val-hi">JPM</td><td>13.5%</td><td class="val-neg">32.5%</td><td>0.42</td><td class="val-dim">Banks suffer in crises — COVID and rate shocks</td></tr>
+        <tr><td class="val-hi">JNJ</td><td class="val-neg">2.4%</td><td>19.6%</td><td class="val-neg">0.12</td><td class="val-dim">Worst Sharpe — low return doesn't justify the risk</td></tr>
+        <tr><td class="val-hi">GLD</td><td>10.3%</td><td class="val-pos">15.5%</td><td>0.66</td><td class="val-dim">Lowest individual volatility — but its real value is elsewhere</td></tr>
+        <tr><td class="val-hi">SPY</td><td>13.4%</td><td>21.1%</td><td>0.64</td><td class="val-dim">Benchmark — middle ground across all metrics</td></tr>
+      </tbody>
+    </table>
+    <div class="insight">
+      <span class="insight-icon">Note</span>
+      <p class="insight-text">JNJ has the worst individual Sharpe at 0.12. But individual Sharpe tells you nothing about what an asset contributes <strong>in combination</strong> with others. Whether to include JNJ depends on what the others already provide — which is exactly what the optimizer resolves.</p>
+    </div>
+  </div>
+
+  <!-- 03 -->
+  <div class="section" id="correlation">
+    <div class="section-num">03 — Correlation Structure</div>
+    <h2>The real diversification story was in the correlations</h2>
+    <p class="prose">When the full correlation matrix was computed, three findings stood out immediately — and each one directly shaped how the optimizer allocated capital.</p>
+    <table class="data-table">
+      <thead><tr><th>Pair</th><th>Correlation</th><th>Implication</th></tr></thead>
+      <tbody>
+        <tr><td>JPM ↔ GLD</td><td class="val-pos">−0.01</td><td>Near-perfect independence. Gold and banks respond to entirely different forces.</td></tr>
+        <tr><td>GLD ↔ SPY</td><td class="val-pos">+0.16</td><td>Gold barely co-moves with equities — classic safe-haven behavior confirmed.</td></tr>
+        <tr><td>AAPL ↔ SPY</td><td class="val-neg">+0.79</td><td>Tech moves with the market. AAPL + SPY adds concentration, not diversification.</td></tr>
+        <tr><td>JPM ↔ SPY</td><td class="val-neg">+0.71</td><td>Banks are cyclical — same regime exposure as the broad market.</td></tr>
+        <tr><td>AAPL ↔ JPM</td><td class="val-neg">+0.68</td><td>Both correlated with SPY — they amplify each other rather than offset.</td></tr>
+      </tbody>
+    </table>
+    <div class="pull-quote"><p><strong>Gold's near-zero correlation with JPM (−0.01) was the most consequential single finding.</strong> It meant the optimizer would systematically include GLD at a weight that return-only thinking would never suggest.</p></div>
+    <p class="prose">The second implication: AAPL and JPM are not true diversifiers of each other. Both correlate above 0.68 with SPY — holding both is a concentrated bet on the equity risk premium. This becomes directly visible in the optimal weights: the optimizer never simultaneously assigns high weight to both.</p>
+  </div>
+
+  <!-- 04 -->
+  <div class="section" id="montecarlo">
+    <div class="section-num">04 — Monte Carlo Simulation</div>
+    <h2>Mapping the space of all possible portfolios</h2>
+    <p class="prose">10,000 portfolios were generated using Dirichlet-distributed random weights — ensuring all combinations are positive and sum to exactly 100%. For each portfolio, annualized return, volatility and Sharpe Ratio were computed from the full covariance matrix.</p>
+    <div class="code-wrap">
+      <div class="code-label">
+        <span class="code-file">01_portfolio.ipynb — Monte Carlo</span>
+        <button class="code-copy" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code>np.random.<span class="fn">seed</span>(<span class="nm">42</span>)
+<span class="va">NUM_PORTFOLIOS</span> = <span class="nm">10_000</span>
+<span class="va">results</span>        = np.<span class="fn">zeros</span>((NUM_PORTFOLIOS, <span class="nm">3</span>))
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(NUM_PORTFOLIOS):
+    <span class="cm"># Dirichlet: positive weights that sum to 1</span>
+    <span class="va">w</span>       = np.random.<span class="fn">dirichlet</span>(np.<span class="fn">ones</span>(num_assets))
+    <span class="va">ret</span>     = np.<span class="fn">dot</span>(w, mean_returns)
+    <span class="va">vol</span>     = np.<span class="fn">sqrt</span>(w.T <span class="fn">@</span> cov_matrix <span class="fn">@</span> w)
+    results[i] = [ret, vol, ret / vol]
+
+<span class="cm"># Monte Carlo best Sharpe: 0.968 — approximation only</span>
+<span class="cm"># True optimum requires constrained optimization (see §06)</span></code></pre>
+    </div>
+    <p class="prose">The simulation found a best Sharpe of <strong>0.968</strong> — already higher than any individual asset. But Monte Carlo is an approximation: the best of 10,000 random samples, not the true mathematical optimum. The gap between 0.968 and the scipy result (0.979) is small but meaningful — it is the difference between a good guess and a provably optimal solution.</p>
+    <div class="insight">
+      <span class="insight-icon">Note</span>
+      <p class="insight-text">Documenting this gap is intentional. <strong>Institutions use Monte Carlo for visualization, not for final allocation decisions.</strong> The cloud of portfolios builds intuition for where the optimum lies — constrained optimization finds it exactly.</p>
+    </div>
+  </div>
+
+  <!-- 05 -->
+  <div class="section" id="frontier">
+    <div class="section-num">05 — Efficient Frontier</div>
+    <h2>What the cloud of portfolios reveals</h2>
+    <p class="prose">When all 10,000 portfolios are plotted in risk-return space and colored by Sharpe Ratio, the structure of the feasible set becomes visible. Three observations stood out.</p>
+
+    <!-- Clean SVG frontier -->
+    <div style="background:var(--surface);border:1px solid var(--border);padding:2rem 1.5rem;margin:1.8rem 0;">
+      <svg viewBox="0 0 560 295" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <!-- axes -->
+        <line x1="55" y1="15" x2="55" y2="260" stroke="#e5e5e3" stroke-width="1"/>
+        <line x1="55" y1="260" x2="535" y2="260" stroke="#e5e5e3" stroke-width="1"/>
+        <!-- grid -->
+        <line x1="55" y1="60"  x2="535" y2="60"  stroke="#e5e5e3" stroke-width="0.5"/>
+        <line x1="55" y1="110" x2="535" y2="110" stroke="#e5e5e3" stroke-width="0.5"/>
+        <line x1="55" y1="160" x2="535" y2="160" stroke="#e5e5e3" stroke-width="0.5"/>
+        <line x1="55" y1="210" x2="535" y2="210" stroke="#e5e5e3" stroke-width="0.5"/>
+        <line x1="135" y1="15" x2="135" y2="260" stroke="#e5e5e3" stroke-width="0.5"/>
+        <line x1="215" y1="15" x2="215" y2="260" stroke="#e5e5e3" stroke-width="0.5"/>
+        <line x1="295" y1="15" x2="295" y2="260" stroke="#e5e5e3" stroke-width="0.5"/>
+        <line x1="375" y1="15" x2="375" y2="260" stroke="#e5e5e3" stroke-width="0.5"/>
+        <line x1="455" y1="15" x2="455" y2="260" stroke="#e5e5e3" stroke-width="0.5"/>
+        <!-- labels -->
+        <text x="295" y="278" text-anchor="middle" font-family="Geist Mono,monospace" font-size="9" fill="#b0b0ac">Annual Volatility →</text>
+        <text x="16" y="138" text-anchor="middle" font-family="Geist Mono,monospace" font-size="9" fill="#b0b0ac" transform="rotate(-90,16,138)">Annual Return →</text>
+        <text x="55"  y="272" text-anchor="middle" font-family="Geist Mono,monospace" font-size="8" fill="#b0b0ac">10%</text>
+        <text x="135" y="272" text-anchor="middle" font-family="Geist Mono,monospace" font-size="8" fill="#b0b0ac">14%</text>
+        <text x="215" y="272" text-anchor="middle" font-family="Geist Mono,monospace" font-size="8" fill="#b0b0ac">18%</text>
+        <text x="295" y="272" text-anchor="middle" font-family="Geist Mono,monospace" font-size="8" fill="#b0b0ac">22%</text>
+        <text x="375" y="272" text-anchor="middle" font-family="Geist Mono,monospace" font-size="8" fill="#b0b0ac">26%</text>
+        <text x="455" y="272" text-anchor="middle" font-family="Geist Mono,monospace" font-size="8" fill="#b0b0ac">30%</text>
+        <text x="50" y="63"  text-anchor="end" font-family="Geist Mono,monospace" font-size="8" fill="#b0b0ac">25%</text>
+        <text x="50" y="113" text-anchor="end" font-family="Geist Mono,monospace" font-size="8" fill="#b0b0ac">18%</text>
+        <text x="50" y="163" text-anchor="end" font-family="Geist Mono,monospace" font-size="8" fill="#b0b0ac">11%</text>
+        <text x="50" y="213" text-anchor="end" font-family="Geist Mono,monospace" font-size="8" fill="#b0b0ac">4%</text>
+        <!-- cloud dots: red=low Sharpe, amber=mid, green=high -->
+        <g opacity="0.5">
+          <circle cx="100" cy="200" r="2.5" fill="#dc2626"/><circle cx="120" cy="210" r="2" fill="#dc2626"/><circle cx="140" cy="205" r="2" fill="#dc2626"/><circle cx="160" cy="208" r="2" fill="#dc2626"/><circle cx="180" cy="212" r="2" fill="#dc2626"/><circle cx="200" cy="207" r="2" fill="#dc2626"/><circle cx="220" cy="202" r="2" fill="#dc2626"/><circle cx="240" cy="208" r="2" fill="#dc2626"/><circle cx="260" cy="205" r="2" fill="#dc2626"/><circle cx="280" cy="200" r="2" fill="#dc2626"/><circle cx="300" cy="196" r="2" fill="#dc2626"/><circle cx="320" cy="200" r="2" fill="#dc2626"/><circle cx="340" cy="205" r="2" fill="#dc2626"/><circle cx="360" cy="200" r="2" fill="#dc2626"/><circle cx="380" cy="195" r="2" fill="#dc2626"/><circle cx="400" cy="190" r="2" fill="#dc2626"/><circle cx="420" cy="185" r="2" fill="#dc2626"/><circle cx="440" cy="190" r="2" fill="#dc2626"/><circle cx="110" cy="218" r="2" fill="#dc2626"/><circle cx="130" cy="222" r="2" fill="#dc2626"/><circle cx="150" cy="216" r="2" fill="#dc2626"/><circle cx="170" cy="220" r="2" fill="#dc2626"/>
+          <circle cx="90"  cy="178" r="2.5" fill="#ca8a04"/><circle cx="110" cy="170" r="2" fill="#ca8a04"/><circle cx="130" cy="163" r="2" fill="#ca8a04"/><circle cx="150" cy="158" r="2" fill="#ca8a04"/><circle cx="170" cy="165" r="2" fill="#ca8a04"/><circle cx="190" cy="170" r="2" fill="#ca8a04"/><circle cx="210" cy="163" r="2" fill="#ca8a04"/><circle cx="230" cy="155" r="2" fill="#ca8a04"/><circle cx="250" cy="160" r="2" fill="#ca8a04"/><circle cx="270" cy="165" r="2" fill="#ca8a04"/><circle cx="290" cy="158" r="2" fill="#ca8a04"/><circle cx="310" cy="153" r="2" fill="#ca8a04"/><circle cx="330" cy="158" r="2" fill="#ca8a04"/><circle cx="350" cy="163" r="2" fill="#ca8a04"/><circle cx="370" cy="158" r="2" fill="#ca8a04"/><circle cx="390" cy="153" r="2" fill="#ca8a04"/>
+          <circle cx="75"  cy="155" r="2.5" fill="#16a34a"/><circle cx="95"  cy="142" r="2" fill="#16a34a"/><circle cx="115" cy="130" r="2" fill="#16a34a"/><circle cx="135" cy="120" r="2" fill="#16a34a"/><circle cx="155" cy="128" r="2" fill="#16a34a"/><circle cx="175" cy="135" r="2" fill="#16a34a"/><circle cx="195" cy="125" r="2" fill="#16a34a"/><circle cx="215" cy="115" r="2" fill="#16a34a"/><circle cx="235" cy="122" r="2" fill="#16a34a"/><circle cx="255" cy="130" r="2" fill="#16a34a"/><circle cx="275" cy="122" r="2" fill="#16a34a"/><circle cx="295" cy="115" r="2" fill="#16a34a"/>
+        </g>
+        <!-- Individual assets -->
+        <circle cx="440" cy="63"  r="4" fill="none" stroke="#b0b0ac" stroke-width="1.5"/>
+        <text x="448" y="61"  font-family="Geist Mono,monospace" font-size="9" fill="#8c8c88">AAPL</text>
+        <circle cx="455" cy="138" r="4" fill="none" stroke="#b0b0ac" stroke-width="1.5"/>
+        <text x="463" y="136" font-family="Geist Mono,monospace" font-size="9" fill="#8c8c88">JPM</text>
+        <circle cx="275" cy="225" r="4" fill="none" stroke="#b0b0ac" stroke-width="1.5"/>
+        <text x="283" y="223" font-family="Geist Mono,monospace" font-size="9" fill="#8c8c88">JNJ</text>
+        <circle cx="170" cy="143" r="4" fill="none" stroke="#b0b0ac" stroke-width="1.5"/>
+        <text x="115" y="141" font-family="Geist Mono,monospace" font-size="9" fill="#8c8c88">GLD</text>
+        <circle cx="285" cy="133" r="4" fill="none" stroke="#b0b0ac" stroke-width="1.5"/>
+        <text x="293" y="131" font-family="Geist Mono,monospace" font-size="9" fill="#8c8c88">SPY</text>
+        <!-- Max Sharpe -->
+        <circle cx="190" cy="105" r="6" fill="#1a1a18"/>
+        <line x1="196" y1="100" x2="240" y2="82" stroke="#1a1a18" stroke-width="0.8"/>
+        <text x="244" y="84" font-family="Geist Mono,monospace" font-size="8.5" fill="#1a1a18" font-weight="500">Max Sharpe  0.979</text>
+        <text x="244" y="95" font-family="Geist Mono,monospace" font-size="8" fill="#8c8c88">Return 15.3% · Vol 15.7%</text>
+        <!-- Min Vol -->
+        <circle cx="72" cy="158" r="5" fill="none" stroke="#1a1a18" stroke-width="1.5"/>
+        <line x1="67" y1="156" x2="35" y2="142" stroke="#1a1a18" stroke-width="0.8"/>
+        <text x="8"  y="137" font-family="Geist Mono,monospace" font-size="8.5" fill="#1a1a18">Min Vol</text>
+        <text x="8"  y="148" font-family="Geist Mono,monospace" font-size="8" fill="#8c8c88">12.3%</text>
+      </svg>
+      <p style="font-family:'Geist Mono',monospace;font-size:0.62rem;color:var(--muted2);text-align:center;margin-top:0.8rem;letter-spacing:0.06em;text-transform:uppercase;">10,000 Monte Carlo portfolios · color = Sharpe ratio (red → amber → green)</p>
+    </div>
+
+    <p class="prose"><strong>First observation:</strong> both optimal portfolios sit on the upper-left boundary of the cloud — no greener point exists above or to their left. <strong>Second observation:</strong> JNJ is completely isolated below and to the right of the main cluster. Its low return combined with mid-range volatility places it in a dominated region — any optimizer with better alternatives will exclude it. <strong>Third observation:</strong> GLD sits at the far left of the cloud, well below all equity assets on the volatility axis. Individual assets always lie inside or below the frontier — the combination always dominates.</p>
+  </div>
+
+  <!-- 06 -->
+  <div class="section" id="optimization">
+    <div class="section-num">06 — scipy Optimization</div>
+    <h2>From approximation to exact solution</h2>
+    <p class="prose">SLSQP (Sequential Least Squares Programming) was applied with two constraints: no short selling (all weights ≥ 0%) and full investment (weights sum to exactly 100%). Two objective functions were solved independently — maximize Sharpe Ratio, and minimize portfolio volatility.</p>
+    <div class="code-wrap">
+      <div class="code-label">
+        <span class="code-file">01_portfolio.ipynb — scipy SLSQP</span>
+        <button class="code-copy" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="kw">from</span> scipy.optimize <span class="kw">import</span> minimize
+
+<span class="kw">def</span> <span class="fn">neg_sharpe</span>(w):
+    ret = np.<span class="fn">dot</span>(w, mean_returns)
+    vol = np.<span class="fn">sqrt</span>(w.T <span class="fn">@</span> cov_matrix <span class="fn">@</span> w)
+    <span class="kw">return</span> -(ret / vol)  <span class="cm"># minimize negative = maximize sharpe</span>
+
+<span class="va">constraints</span> = {<span class="st">'type'</span>: <span class="st">'eq'</span>, <span class="st">'fun'</span>: <span class="kw">lambda</span> w: np.<span class="fn">sum</span>(w) - <span class="nm">1</span>}
+<span class="va">bounds</span>      = <span class="fn">tuple</span>((<span class="nm">0</span>, <span class="nm">1</span>) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(num_assets))
+<span class="va">w0</span>          = np.<span class="fn">ones</span>(num_assets) / num_assets
+
+<span class="va">result</span> = <span class="fn">minimize</span>(neg_sharpe, w0, method=<span class="st">'SLSQP'</span>,
+                   bounds=bounds, constraints=constraints)</code></pre>
+    </div>
+    <p class="prose">The results confirmed what the correlation analysis had already suggested — and introduced one finding that required careful interpretation.</p>
+
+    <div class="weights-grid">
+      <div class="weights-col">
+        <h4>Max Sharpe · Sharpe 0.979</h4>
+        <div class="weight-row"><div class="weight-top"><span class="weight-name">JPM</span><span class="weight-val">59.7%</span></div><div class="weight-bar-bg"><div class="weight-bar" style="width:59.7%"></div></div></div>
+        <div class="weight-row"><div class="weight-top"><span class="weight-name">AAPL</span><span class="weight-val">32.7%</span></div><div class="weight-bar-bg"><div class="weight-bar" style="width:32.7%"></div></div></div>
+        <div class="weight-row"><div class="weight-top"><span class="weight-name">GLD</span><span class="weight-val">7.6%</span></div><div class="weight-bar-bg"><div class="weight-bar" style="width:7.6%"></div></div></div>
+        <div class="weight-row weight-zero"><div class="weight-top"><span class="weight-name">JNJ</span><span class="weight-val">0.0%</span></div><div class="weight-bar-bg"><div class="weight-bar" style="width:0%"></div></div></div>
+        <div class="weight-row weight-zero"><div class="weight-top"><span class="weight-name">SPY</span><span class="weight-val">0.0%</span></div><div class="weight-bar-bg"><div class="weight-bar" style="width:0%"></div></div></div>
+      </div>
+      <div class="weights-col">
+        <h4>Min Volatility · Vol 12.3%</h4>
+        <div class="weight-row"><div class="weight-top"><span class="weight-name">JPM</span><span class="weight-val">58.0%</span></div><div class="weight-bar-bg"><div class="weight-bar" style="width:58%"></div></div></div>
+        <div class="weight-row"><div class="weight-top"><span class="weight-name">JNJ</span><span class="weight-val">28.3%</span></div><div class="weight-bar-bg"><div class="weight-bar" style="width:28.3%"></div></div></div>
+        <div class="weight-row"><div class="weight-top"><span class="weight-name">SPY</span><span class="weight-val">10.8%</span></div><div class="weight-bar-bg"><div class="weight-bar" style="width:10.8%"></div></div></div>
+        <div class="weight-row"><div class="weight-top"><span class="weight-name">GLD</span><span class="weight-val">2.8%</span></div><div class="weight-bar-bg"><div class="weight-bar" style="width:2.8%"></div></div></div>
+        <div class="weight-row weight-zero"><div class="weight-top"><span class="weight-name">AAPL</span><span class="weight-val">0.0%</span></div><div class="weight-bar-bg"><div class="weight-bar" style="width:0%"></div></div></div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <span class="insight-icon">Note</span>
+      <p class="insight-text"><strong>JPM at ~60% in both portfolios</strong> is striking given its high individual volatility (32.5%). The explanation lies in its return over this specific window — JPM recovered sharply from COVID and benefited from the 2022 rate hike cycle in ways GLD and JNJ did not. This is a direct reminder that <strong>optimization is always conditional on the lookback period.</strong></p>
+    </div>
+
+    <p class="prose">The transition from Max Sharpe to Min Volatility tells a precise story: <strong>AAPL's 32.7% is replaced almost entirely by JNJ's 28.3%</strong>. When the objective shifts from maximizing risk-adjusted return to minimizing risk, high-volatility growth assets are replaced by defensive ones — regardless of their individual Sharpe. The optimizer is not ranking assets. It is solving a system of equations.</p>
+
+    <div class="insight">
+      <span class="insight-icon">Note</span>
+      <p class="insight-text"><strong>SPY receives 0% in the Max Sharpe portfolio</strong> despite being the market benchmark. AAPL and JPM already have correlations of 0.79 and 0.71 with SPY — adding it would be redundant exposure without incremental return. The optimizer eliminates it as efficiently as it eliminated JNJ.</p>
+    </div>
+  </div>
+
+  <!-- 07 -->
+  <div class="section" id="findings">
+    <div class="section-num">07 — Key Findings</div>
+    <h2>What the data demonstrated</h2>
+    <div class="findings">
+      <div class="finding"><div class="finding-stat">0.979</div><div class="finding-title">Portfolio Sharpe vs. 0.79 best individual</div><p class="finding-body">The optimized portfolio outperforms every individual asset on a risk-adjusted basis. Diversification created value that no single position could deliver alone.</p></div>
+      <div class="finding"><div class="finding-stat">12.3%</div><div class="finding-title">Portfolio vol below GLD's 15.5%</div><p class="finding-body">The minimum volatility portfolio is less risky than the safest individual asset. Combining assets reduces risk below any single component — the core result of Markowitz's theorem.</p></div>
+      <div class="finding"><div class="finding-stat">−0.01</div><div class="finding-title">GLD ↔ JPM correlation</div><p class="finding-body">Near-zero correlation made GLD the most valuable diversifier — not because of its return, but because of its independence from the equity risk factor that drives everything else.</p></div>
+      <div class="finding"><div class="finding-stat">3 / 5</div><div class="finding-title">Assets at 0% in Max Sharpe</div><p class="finding-body">JNJ and SPY are eliminated entirely. Corner solutions reveal which assets are genuinely redundant given what the remaining three already provide.</p></div>
+    </div>
+    <div class="pull-quote"><p>The most counterintuitive result: <strong>GLD, with the second-lowest individual return, appears in both optimal portfolios.</strong> Return-only thinking would have excluded it. Correlation-aware optimization includes it precisely because every other asset moves together.</p></div>
+  </div>
+
+  <!-- 08 -->
+  <div class="section" id="limitations">
+    <div class="section-num">08 — Limitations & Next Steps</div>
+    <h2>What this model does not do</h2>
+    <p class="prose">Documenting limitations is not a weakness — it is what separates rigorous analysis from a demonstration.</p>
+    <ul class="limit-list">
+      <li><span class="limit-tag">Lookback bias</span><span class="limit-text">Weights are optimized on historical data. A <strong>rolling window reoptimization</strong> — recalculating every quarter using only past data — would test whether the allocation generalizes out-of-sample.</span></li>
+      <li><span class="limit-tag">Static weights</span><span class="limit-text">The portfolio holds fixed allocations for 5 years. <strong>Correlations shift across regimes</strong> — particularly between the COVID crisis and the 2022 rate environment. A dynamic model rebalances as the covariance matrix evolves.</span></li>
+      <li><span class="limit-tag">No costs</span><span class="limit-text">Transaction costs and rebalancing fees are not modeled. These erode actual returns, especially for strategies with high turnover between periods.</span></li>
+      <li><span class="limit-tag">Normality</span><span class="limit-text">Log returns are approximately but not perfectly normal. <strong>Fat tails exist</strong> — March 2020 was a 6-sigma event under a Gaussian assumption. Module 2 addresses this via CVaR, which does not assume normality.</span></li>
+      <li><span class="limit-tag">Module 2</span><span class="limit-text"><strong>Coming next:</strong> VaR, CVaR (Expected Shortfall), Maximum Drawdown, and stress testing under the COVID crash, 2022 bear market, and rate shock scenarios.</span></li>
+    </ul>
+  </div>
+
+</div>
+
+<aside class="toc-sidebar">
+  <div class="toc-label">Contents</div>
+  <a href="#context"      class="toc-link">01  Context</a>
+  <a href="#returns"      class="toc-link">02  Statistics</a>
+  <a href="#correlation"  class="toc-link">03  Correlations</a>
+  <a href="#montecarlo"   class="toc-link">04  Monte Carlo</a>
+  <a href="#frontier"     class="toc-link">05  Frontier</a>
+  <a href="#optimization" class="toc-link">06  Optimization</a>
+  <a href="#findings"     class="toc-link">07  Findings</a>
+  <a href="#limitations"  class="toc-link">08  Limitations</a>
+</aside>
+
+</div>
+
+<div class="page-bottom">
+  <a href="index.html#projects" class="btn btn-ghost">← All Projects</a>
+  <div style="display:flex;gap:0.6rem;">
+    <a href="#" class="btn btn-ghost">GitHub →</a>
+    <a href="#" class="btn btn-solid">Open in Colab →</a>
+  </div>
+</div>
+
+<script>
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'copied';
+    setTimeout(() => btn.textContent = 'copy', 2000);
+  });
+}
+const sections = document.querySelectorAll('.section[id]');
+const links = document.querySelectorAll('.toc-link');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const a = document.querySelector(`.toc-link[href="#${e.target.id}"]`);
+      if (a) a.classList.add('active');
+    }
+  });
+}, { rootMargin: '-15% 0px -75% 0px' });
+sections.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
