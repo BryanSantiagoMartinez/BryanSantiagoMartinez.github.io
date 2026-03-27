@@ -159,7 +159,7 @@ code { font-family:'Geist Mono',monospace; font-size:0.78rem; line-height:1.75; 
   <div class="hero-meta-top">
     <span class="hero-tag">Quantitative Finance</span>
     <div class="hero-dot"></div>
-    <span class="hero-tag">Module 1 of 3</span>
+    <span class="hero-tag">Modules 1 & 2 Complete</span>
     <div class="hero-dot"></div>
     <span class="hero-tag">2025</span>
   </div>
@@ -180,9 +180,9 @@ code { font-family:'Geist Mono',monospace; font-size:0.78rem; line-height:1.75; 
 <div class="metrics-strip">
   <div class="metrics-inner">
     <div class="metric"><div class="metric-num">0.979</div><div class="metric-label">Max Sharpe Ratio</div></div>
-    <div class="metric"><div class="metric-num">15.3%</div><div class="metric-label">Optimal Annual Return</div></div>
-    <div class="metric"><div class="metric-num">12.3%</div><div class="metric-label">Min Portfolio Volatility</div></div>
-    <div class="metric"><div class="metric-num">10K</div><div class="metric-label">Monte Carlo Portfolios</div></div>
+    <div class="metric"><div class="metric-num">−18.7%</div><div class="metric-label">Max Drawdown (COVID)</div></div>
+    <div class="metric"><div class="metric-num">$35.8K</div><div class="metric-label">CVaR 99% on $1M</div></div>
+    <div class="metric"><div class="metric-num">+11.7%</div><div class="metric-label">vs Equal Weight (COVID)</div></div>
   </div>
 </div>
 
@@ -411,16 +411,201 @@ code { font-family:'Geist Mono',monospace; font-size:0.78rem; line-height:1.75; 
   </div>
 
   <!-- 08 -->
+  <div class="section" id="var">
+    <div class="section-num">08 — Value at Risk</div>
+    <h2>How much can this portfolio lose on a bad day?</h2>
+    <p class="prose">
+      VaR answers a precise question: given a confidence level, what is the minimum loss
+      on the worst X% of trading days? It was calculated using three independent methods
+      on a $1,000,000 notional portfolio with Max Sharpe weights.
+    </p>
+    <table class="data-table">
+      <thead><tr><th>Method</th><th>VaR 90%</th><th>VaR 95%</th><th>VaR 99%</th></tr></thead>
+      <tbody>
+        <tr><td class="val-hi">Historical Simulation</td><td>$10,806</td><td>$15,120</td><td class="val-neg">$26,148</td></tr>
+        <tr><td class="val-hi">Parametric (Normal)</td><td>$12,030</td><td>$15,613</td><td>$22,333</td></tr>
+        <tr><td class="val-hi">Monte Carlo</td><td>$12,028</td><td>$15,599</td><td>$22,415</td></tr>
+      </tbody>
+    </table>
+    <p class="prose">
+      At the 90% and 95% levels the three methods converge tightly — a sign that the portfolio
+      behaves predictably under normal market conditions. The divergence appears at 99%:
+      Historical VaR is <strong>$3,800 higher</strong> than Parametric. This gap is not noise —
+      it is the fingerprint of March 2020. The COVID crash was a 6-sigma event under a
+      Gaussian assumption, and it lives inside this dataset, inflating the empirical tail.
+    </p>
+    <div class="pull-quote">
+      <p>The Parametric method assumes markets follow a bell curve.
+      <strong>The Historical method knows about March 2020.</strong>
+      At the 99% level, that difference is $3,800 per million invested.</p>
+    </div>
+  </div>
+
+  <!-- 09 -->
+  <div class="section" id="cvar">
+    <div class="section-num">09 — CVaR / Expected Shortfall</div>
+    <h2>When things go wrong, how wrong do they go?</h2>
+    <p class="prose">
+      VaR has a known limitation: it tells you the threshold of the worst X% of days,
+      but says nothing about what happens inside that tail. CVaR — also called Expected
+      Shortfall — fills that gap. It measures the <em>average loss</em> on the days that
+      exceed the VaR threshold.
+    </p>
+    <table class="data-table">
+      <thead><tr><th>Level</th><th>VaR (threshold)</th><th>CVaR (avg beyond threshold)</th><th>Tail excess</th></tr></thead>
+      <tbody>
+        <tr><td>90%</td><td>$10,806</td><td class="val-neg">~$17,200</td><td>+$6,400</td></tr>
+        <tr><td>95%</td><td>$15,120</td><td class="val-neg">~$22,500</td><td>+$7,380</td></tr>
+        <tr><td class="val-hi">99%</td><td class="val-neg">$26,148</td><td class="val-neg">$35,821</td><td class="val-neg">+$9,673</td></tr>
+      </tbody>
+    </table>
+    <div class="insight">
+      <span class="insight-icon">Note</span>
+      <p class="insight-text">
+        The CVaR 99% of <strong>$35,821 vs VaR 99% of $26,148</strong> means that on the
+        worst 1% of trading days, the portfolio does not merely lose $26K — it loses
+        $35.8K on average. The $9,673 excess reflects fat tails driven by extreme crisis
+        events in the sample. <strong>This is why regulators require banks to use CVaR
+        rather than VaR for capital adequacy calculations.</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="section" id="drawdown">
+    <div class="section-num">10 — Maximum Drawdown</div>
+    <h2>The worst peak-to-trough loss in five years</h2>
+    <p class="prose">
+      Maximum Drawdown measures the largest cumulative loss from a portfolio's highest
+      point to its subsequent lowest point. Unlike VaR, it captures the full duration
+      of a loss — not just a single bad day.
+    </p>
+    <table class="data-table">
+      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Maximum Drawdown</td><td class="val-neg">−18.72%  ($187,200 on $1M)</td></tr>
+        <tr><td>Peak date</td><td>19 February 2020</td></tr>
+        <tr><td>Trough date</td><td>20 March 2020</td></tr>
+        <tr><td>Drawdown duration</td><td>30 days — the COVID freefall</td></tr>
+        <tr><td>Recovery date</td><td>1 June 2020</td></tr>
+        <tr><td class="val-hi">Recovery duration</td><td class="val-pos">73 days — faster than most equity drawdowns</td></tr>
+      </tbody>
+    </table>
+    <p class="prose">
+      The dates tell the complete story of the COVID crash. February 19th was the last
+      all-time high before the pandemic became a global market event. March 20th was
+      peak panic — the day the Fed announced unlimited QE and markets found a floor.
+      By June 1st the portfolio had fully recovered, propelled by fiscal stimulus and
+      the near-zero rate environment.
+    </p>
+    <div class="pull-quote">
+      <p>−18.72% is a serious drawdown. But the S&P 500 fell −33.7% in the same 30 days.
+      <strong>The portfolio lost roughly half of what the market lost</strong> —
+      the direct consequence of GLD's −3.6% during a period when everything else collapsed.</p>
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="section" id="stress">
+    <div class="section-num">11 — Stress Testing</div>
+    <h2>Three crises, three different tests of diversification</h2>
+    <p class="prose">
+      Each crisis in the 2020–2024 period tested the portfolio differently.
+      The COVID crash was a liquidity panic. The 2022 bear market was a rate-driven
+      structural repricing. The SVB crisis was a sector-specific contagion event.
+      A portfolio that only survives one type of crisis is not truly diversified.
+    </p>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Asset</th><th>COVID Crash</th><th>2022 Bear Mkt</th><th>SVB Crisis</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="val-hi">AAPL</td><td class="val-neg">−30.67%</td><td class="val-neg">−23.68%</td><td class="val-pos">+4.83%</td></tr>
+        <tr><td class="val-hi">JPM</td><td class="val-neg">−42.52%</td><td class="val-neg">−33.90%</td><td class="val-neg">−9.35%</td></tr>
+        <tr><td class="val-hi">JNJ</td><td class="val-neg">−24.90%</td><td class="val-pos">−3.29%</td><td class="val-pos">−0.20%</td></tr>
+        <tr><td class="val-hi">GLD</td><td class="val-pos">−3.62%</td><td class="val-neg">−7.33%</td><td class="val-pos">+8.97%</td></tr>
+        <tr><td class="val-hi">SPY</td><td class="val-neg">−33.72%</td><td class="val-neg">−24.50%</td><td class="val-neg">−0.42%</td></tr>
+        <tr style="border-top:2px solid var(--border)">
+          <td class="val-hi">Max Sharpe</td>
+          <td class="val-neg">−15.43%</td>
+          <td class="val-neg">−14.70%</td>
+          <td class="val-pos">+6.22%</td>
+        </tr>
+        <tr>
+          <td class="val-hi">Min Vol</td>
+          <td class="val-neg">−14.00%</td>
+          <td class="val-pos">−8.79%</td>
+          <td class="val-pos">+4.84%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight">
+      <span class="insight-icon">Note</span>
+      <p class="insight-text">
+        The SVB crisis produced the most revealing result: <strong>the portfolio gained +6.22%
+        during a banking crisis despite holding 59.7% in JPM</strong> — a bank stock that fell
+        −9.35%. GLD surged +8.97% as investors fled to safety, and AAPL +4.83% as a
+        perceived non-bank refuge. Diversification did not merely cushion losses —
+        it generated positive returns in a crisis.
+      </p>
+    </div>
+
+    <p class="prose">
+      The 2022 bear market exposes the most important distinction between the two portfolios.
+      Max Sharpe lost −14.70% while Min Vol lost only −8.79% — a gap of nearly 6 percentage
+      points. This happened because Min Vol holds 28.3% JNJ (defensive, rate-insensitive)
+      and 0% AAPL, while Max Sharpe holds 32.7% AAPL — the asset most penalized by
+      rising interest rates. <strong>The optimizer that maximizes returns in normal markets
+      is not the same one that minimizes losses in rate-driven bear markets.</strong>
+    </p>
+
+    <table class="data-table">
+      <thead><tr><th>Scenario</th><th>Equal Weight</th><th>Max Sharpe</th><th>Advantage</th></tr></thead>
+      <tbody>
+        <tr><td>COVID Crash (Feb–Mar 2020)</td><td class="val-neg">−27.09%</td><td class="val-neg">−15.43%</td><td class="val-pos">+11.66%</td></tr>
+        <tr><td>2022 Bear Market (Jan–Oct 2022)</td><td class="val-neg">−18.54%</td><td class="val-neg">−14.70%</td><td class="val-pos">+3.84%</td></tr>
+        <tr><td>SVB Crisis (Mar 2023)</td><td class="val-pos">+0.76%</td><td class="val-pos">+6.22%</td><td class="val-pos">+5.45%</td></tr>
+      </tbody>
+    </table>
+
+    <div class="pull-quote">
+      <p>The optimized portfolio outperformed equal-weight allocation in all three crises.
+      <strong>In the COVID crash, that difference was $116,600 on a $1M portfolio.</strong>
+      That is the dollar value of mathematical optimization over intuition.</p>
+    </div>
+  </div>
+
+  <!-- 12 -->
+  <div class="section" id="findings">
+    <div class="section-num">12 — Key Findings</div>
+    <h2>What the complete model demonstrated</h2>
+    <div class="findings">
+      <div class="finding"><div class="finding-stat">0.979</div><div class="finding-title">Portfolio Sharpe vs. 0.79 best individual</div><p class="finding-body">The optimized portfolio outperforms every individual asset on a risk-adjusted basis. Diversification created value that no single position could deliver alone.</p></div>
+      <div class="finding"><div class="finding-stat">$35.8K</div><div class="finding-title">CVaR 99% on $1M — tail risk quantified</div><p class="finding-body">On the worst 1% of trading days, the portfolio loses $35,821 on average — $9,673 more than VaR alone predicts. Fat tails are real and driven by crisis events in the sample.</p></div>
+      <div class="finding"><div class="finding-stat">−18.7%</div><div class="finding-title">Max Drawdown — recovered in 73 days</div><p class="finding-body">The portfolio lost 18.7% peak-to-trough during COVID, versus 33.7% for SPY. Full recovery took 73 days — significantly faster than the broader market.</p></div>
+      <div class="finding"><div class="finding-stat">+11.7%</div><div class="finding-title">Outperformance vs equal weight in COVID crash</div><p class="finding-body">Optimization generated $116,600 of additional protection versus a naive equal-weight allocation in the worst single-month drawdown of the dataset.</p></div>
+    </div>
+    <div class="pull-quote">
+      <p>The most counterintuitive finding across both modules:
+      <strong>GLD — with the second-lowest individual return — is present in all optimal portfolios
+      and was the single most important asset in every crisis scenario.</strong>
+      Its value was never in its return. It was always in its independence.</p>
+    </div>
+  </div>
+
+  <!-- 13 -->
   <div class="section" id="limitations">
-    <div class="section-num">08 — Limitations & Next Steps</div>
+    <div class="section-num">13 — Limitations & Module 3</div>
     <h2>What this model does not do</h2>
     <p class="prose">Documenting limitations is not a weakness — it is what separates rigorous analysis from a demonstration.</p>
     <ul class="limit-list">
-      <li><span class="limit-tag">Lookback bias</span><span class="limit-text">Weights are optimized on historical data. A <strong>rolling window reoptimization</strong> — recalculating every quarter using only past data — would test whether the allocation generalizes out-of-sample.</span></li>
-      <li><span class="limit-tag">Static weights</span><span class="limit-text">The portfolio holds fixed allocations for 5 years. <strong>Correlations shift across regimes</strong> — particularly between the COVID crisis and the 2022 rate environment. A dynamic model rebalances as the covariance matrix evolves.</span></li>
-      <li><span class="limit-tag">No costs</span><span class="limit-text">Transaction costs and rebalancing fees are not modeled. These erode actual returns, especially for strategies with high turnover between periods.</span></li>
-      <li><span class="limit-tag">Normality</span><span class="limit-text">Log returns are approximately but not perfectly normal. <strong>Fat tails exist</strong> — March 2020 was a 6-sigma event under a Gaussian assumption. Module 2 addresses this via CVaR, which does not assume normality.</span></li>
-      <li><span class="limit-tag">Module 2</span><span class="limit-text"><strong>Coming next:</strong> VaR, CVaR (Expected Shortfall), Maximum Drawdown, and stress testing under the COVID crash, 2022 bear market, and rate shock scenarios.</span></li>
+      <li><span class="limit-tag">Lookback bias</span><span class="limit-text">Weights are optimized on the full 2020–2024 window. A rolling reoptimization — recalculating every quarter using only past data — would test out-of-sample robustness.</span></li>
+      <li><span class="limit-tag">Static weights</span><span class="limit-text">The portfolio holds fixed allocations for 5 years. The stress tests showed that <strong>optimal weights shift across regimes</strong> — Min Vol outperforms in 2022, Max Sharpe in SVB. A dynamic model would adapt.</span></li>
+      <li><span class="limit-tag">No costs</span><span class="limit-text">Transaction costs and rebalancing fees are not modeled. These erode actual returns, especially for strategies with high turnover.</span></li>
+      <li><span class="limit-tag">VaR horizon</span><span class="limit-text">VaR and CVaR are calculated at a 1-day horizon. Institutional risk managers also compute 10-day VaR (Basel III requirement) and multi-period CVaR for longer holding periods.</span></li>
+      <li><span class="limit-tag">Module 3</span><span class="limit-text"><strong>Coming next:</strong> Backtesting Engine — ARIMA/GARCH signal generation, rolling strategy backtest, and performance attribution vs buy-and-hold benchmark.</span></li>
     </ul>
   </div>
 
@@ -434,8 +619,13 @@ code { font-family:'Geist Mono',monospace; font-size:0.78rem; line-height:1.75; 
   <a href="#montecarlo"   class="toc-link">04  Monte Carlo</a>
   <a href="#frontier"     class="toc-link">05  Frontier</a>
   <a href="#optimization" class="toc-link">06  Optimization</a>
-  <a href="#findings"     class="toc-link">07  Findings</a>
-  <a href="#limitations"  class="toc-link">08  Limitations</a>
+  <a href="#findings"     class="toc-link">07  M1 Findings</a>
+  <a href="#var"          class="toc-link">08  VaR</a>
+  <a href="#cvar"         class="toc-link">09  CVaR</a>
+  <a href="#drawdown"     class="toc-link">10  Drawdown</a>
+  <a href="#stress"       class="toc-link">11  Stress Tests</a>
+  <a href="#findings"     class="toc-link">12  Findings</a>
+  <a href="#limitations"  class="toc-link">13  Limitations</a>
 </aside>
 
 </div>
